@@ -1,0 +1,78 @@
+#include "PHIEliminationUtils.h"
+#include "llvm/ADT/DenseMap.h"
+#include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/ADT/Statistic.h"
+#include "llvm/Analysis/LoopInfo.h"
+#include "llvm/CodeGen/LiveInterval.h"
+#include "llvm/CodeGen/LiveIntervals.h"
+#include "llvm/CodeGen/LiveVariables.h"
+#include "llvm/CodeGen/MachineBasicBlock.h"
+#include "llvm/CodeGen/MachineDominators.h"
+#include "llvm/CodeGen/MachineFunction.h"
+#include "llvm/CodeGen/MachineFunctionPass.h"
+#include "llvm/CodeGen/MachineInstr.h"
+#include "llvm/CodeGen/MachineLoopInfo.h"
+#include "llvm/CodeGen/MachineOperand.h"
+#include "llvm/CodeGen/MachineRegisterInfo.h"
+
+#include "llvm/Pass.h"
+#include "llvm/Support/CommandLine.h"
+#include "llvm/Support/Debug.h"
+#include "llvm/Support/raw_ostream.h"
+#include <cassert>
+#include <iterator>
+#include <utility>
+
+
+using namespace llvm;
+
+
+namespace {
+
+	class shmemlivevariableAnalysis : public MachineFunctionPass {
+		MachineRegisterInfo *MRI; // Machine register information
+		LiveVariables *LV;
+		LiveIntervals *LIS;
+
+	public:
+		static char ID; // Pass identification, replacement for typeid
+
+		shmemlivevariableAnalysis() : MachineFunctionPass(ID) {
+			initializeshmemlivevariableAnalysisPass(*PassRegistry::getPassRegistry());
+		}
+
+		bool runOnMachineFunction(MachineFunction &MF) override;
+		void getAnalysisUsage(AnalysisUsage &AU) const override;
+
+	private:
+
+
+	};
+
+
+	char shmemlivevariableAnalysis::ID = 0;
+
+	char& llvm::shmemlivevariableAnalysis = shmemlivevariableAnalysis::ID;
+
+	INITIALIZE_PASS_DEPENDENCY(LiveVariables)
+
+
+
+
+
+void shmemlivevariableAnalysis::getAnalysisUsage(AnalysisUsage &AU) const {
+	AU.addUsedIfAvailable<LiveVariables>();
+	AU.addPreserved<LiveVariables>();
+	AU.addPreserved<LiveIntervals>();
+	MachineFunctionPass::getAnalysisUsage(AU);
+	}
+
+bool shmemlivevariableAnalysis::runOnMachineFunction(MachineFunction &MF) {
+		MRI = &MF.getRegInfo();
+		LV = getAnalysisIfAvailable<LiveVariables>();
+		LIS = getAnalysisIfAvailable<LiveIntervals>();
+
+		return false;
+
+}
+
