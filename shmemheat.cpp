@@ -396,7 +396,7 @@ using namespace std;
 					}
 					case 2:
 					case 3: {
-						CallInst *ci = cast<CallInst>(ii);
+						CallInst *ci = dyn_cast<CallInst>(ii);
 						errs() << "\n\n\nFound  fxn call: " << *ii << "\n";
 						errs() << "Function call: " << fptr->getName() << "\n";
 						errs() << "\t\t\t No of arguments: " << fptr->arg_size() << "\n";
