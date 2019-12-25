@@ -4,6 +4,28 @@
  * 112079198
  *
  * */
+
+
+
+/*
+ This pass is the core of this fault tolerance pipeline. It should act as a glue between  BlockSplitter and Modify IR. 
+ This can be categorized as a meta info collection pass. Some of the key information pertaining to the placement of checkpointing calls
+ is deduced here. This is organized into several parts.
+
+ 
+ 1. Collecting Alloca related meta info
+ 2. Collect Call instructions info.
+ 3. Runs Reaching Definition analysis.
+ 4. scrutinize every Basic Block for information like:
+		1. load , store instuctions. (This includes normal load, store which are a part of llvm IR)
+		2. Library specific load/Store instructions.  (i.e shmem_put and shmem_get)
+		3. All the shmem library specific calls. 
+		4. Tags if this block is part of a loop.
+		5. Provides information to make an informed decision about the importance of this block.
+		6. populated hnode info for every basic block.
+
+This information plays a key role in 
+*/
 #pragma once
 #include "llvm/ADT/Statistic.h"
 #include "llvm/ADT/DenseMap.h"
