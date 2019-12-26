@@ -24,7 +24,7 @@
 		5. Provides information to make an informed decision about the importance of this block.
 		6. populated hnode info for every basic block.
 
-This information plays a key role in 
+This information plays a key role in identifying places to insert check pointing function call.
 */
 #pragma once
 #include "llvm/ADT/Statistic.h"
@@ -62,7 +62,11 @@ using namespace llvm;
 using namespace std;
 
 //typedef std::pair<unsigned, unsigned> Edge;
-/* helper to get the function. Currently not using it*/
+
+/* helper to get the function. Currently not using it.
+Input: Call instruction.
+Output: name of the call function.
+*/
 
 	string ParseFunctionName(CallInst *call) {
 		auto *fptr = call->getCalledFunction();
@@ -79,34 +83,48 @@ using namespace std;
 		class shmemheat : public  FunctionPass {
 	public:
 
-		/* Vector of all variable metainformation */
+
+		/*  
+		 *	TTR: There are duplications of information as a vector and a map for variable meta info & call instructions.
+		 *	This can be avoided but I choose to use vector for iterating through alloca instrucions and call instructions.
+		 */
+		/*	Vector of all variable aAlloca specific metainformation */
 		vector <VariableMetaInfo*> Variableinfos;
-		/* map of instruction and it's variable meta information*/
+		/*	map of Alloca instruction and it's variable meta information*/
 		DenseMap < Instruction *, VariableMetaInfo* > Inst2VarInfo_map;
 
 		// call intruction and it's operands involved for alloca
 		vector < CallMetaInfo *>  callinstvec;
 		/* Mapping between a call instruction and it's corresponding CallMetainfo entry*/
 		map < CallInst *, CallMetaInfo* > Callinst2AllocaMap;
+		/* mapping between shmem function call and their ID's. This is done towards a generic way of inputting 
+		library calls to this pass as  a user input*/
+
 		map <string, int> functionMap;
-		/* mapping between Basic Block and it's corrresponding head node*/
+		/* mapping between Basic Block and it's corrresponding heat node*/
 		map < bbt, heatNode *> heatmp;
 		/* mapping between Basic Block ID and it's corrresponding head node. Just in case. May come handy*/
 		map < int, heatNode *> heatIDmp;
+
 		//std::map<unsigned, BasicBlock::iterator> IndexToInstr;
-		map< string, int> functionToCodeMap;
+		//map< string, int> functionToCodeMap;
 		static char ID;
 		int id = 1;
-		//shmemheat() : BlockFrequencyInfoWrapperPass() {}
+
+
+		/* Must give inputs to the Live ness analysis.*/
 		LivenessInfo bottom, initialState;
+		
+		
 		/* Instance of liveness analysis which will be invoked in this pass. 
 		This is a work around to ensure dependency on Liveness Analysis. The right 
 		way is to expose LivenessAnalysis as an independent pass.*/
 		LivenessAnalysis *rda;
 
 		shmemheat() : FunctionPass(ID) {
+			/* create an instance of reaching definition analysis*/
 			rda = new LivenessAnalysis(bottom, initialState);
-			//rda = new ReachingDefinitionAnalysis(bottom, initialState);
+
 		}
 		~shmemheat() {}
 
@@ -126,6 +144,12 @@ using namespace std;
 			}
 			return present;
 		}
+
+		/* TTR: We don't use and it's just a placeholder code.
+		
+		Identifies the type of Operand: Store, Load, POinter (GEpi), Direct alloca descendant. And print's it's information which is not handy here
+		
+		*/
 		void peek_into_alloca_mappings(Value *v1) {
 			errs() << "Print argument type: " << *(v1->getType()) << "\n";
 			v1->dump();
@@ -197,7 +221,7 @@ using namespace std;
 		 * This function prints the function arguments. 
 		 *  Additionally, it gets corresponding alloca instruction for every operand of the call instruction.
 		 *  Input: Operand typecasted into Instruction,  va (vector of alloca instructions linked to  out input Instruction)
-		 *  Output: A vector of Alloca instructions for the given instruction.
+		 *  Output: A vector of all Alloca instructions for the given instruction (operand).
 		 */
 
 
@@ -244,6 +268,18 @@ using namespace std;
 
 			errs() << "Iterating over the operands on the call instruction\n";
 			/* Iterate over every operand in the given call instruction.*/
+			/*  Get all instructions that are used in the operand of our call instruciton. This may not directly include alloca instructions
+			because those instructions could be devivatives of base alloca instructions. We call get_allocainst_for_every_operand () to get the
+			base alloca instructions. 
+			
+
+			base alloca %1 = alloca
+			%2 = add %1, 4
+			call (%2)
+			Here we get only %2, But we set out to get %1 as our base alloca.
+			
+			*/
+
 			for (Use &U : ci->operands()) {
 				vector <Instruction *> va;
 				va.clear();
@@ -251,8 +287,19 @@ using namespace std;
 
 				if (dyn_cast<Instruction>(v)) {
 					//errs() << "\n\"" << *dyn_cast<Instruction>(v) << "\n\t" << "\"" << " -> " << "\"" << *ci << "\"" << ";\n";
-					/* Go find alloca bases for every operand in the call instruction.*/
+					/* Go find alloca bases for every operand in the call instruction. we casted the value entry (Operand) into an instruction. 
+					This gives the instruction for this operand.
+					
+
+					%4 = load %3
+					call ( %4 )
+					This gets us %4 = load %3 (instruciton) from %4.
+
+
+
+					*/
 					get_allocainst_for_every_operand(dyn_cast<Instruction>(v), va);
+					/*  We got base alloca instructions for every operand*/
 					for (int i = 0; i < va.size(); i++) {
 						errs() <<  i << " 'th alloca map: " << *(va[i]) << "\n";
 					}
@@ -263,7 +310,7 @@ using namespace std;
 
 			errs() << "Alloca instructions ended\n";
 
-
+			/* TTR: We don't need this . This is an experimental code towards obtaining more information of the call instruction operands.*/
 			if (cname.find("put") != std::string::npos || cname.find("get") != std::string::npos) {
 
 				errs() << "\n\nfunction args trace start\n";
@@ -331,9 +378,10 @@ using namespace std;
 					ci->getArgOperand(3)->dump();
 					errs() << "************************************************************************ \n\n";
 				*/
+				/*TTR: End*/
 			}
 		}
-
+		/* gets the number of heat nodes for print helper*/
 		int getNoOfNodes() {
 			return id - 1;
 		}
@@ -559,7 +607,7 @@ using namespace std;
 
 			DisplayAllocaforCallInstruction(ci);
 		}
-
+		/* checks if this name is of shmem library*/
 		virtual bool isCallOfInterest(string &cname) {
 
 			int value = GetFunctionID(cname);
@@ -570,7 +618,7 @@ using namespace std;
 		virtual bool isShmemCall(string &cname) {
 			return (cname.find("shmem") != std::string::npos);
 		}
-
+		/* Gets the count of store library instructions */
 		int getlibstoreinstructions(vector <Instruction *> &callinst) {
 			int libload = 0;
 			for (auto ii : callinst) {
@@ -597,6 +645,14 @@ using namespace std;
 
 			return libload;
 		}
+		/*   This helper function gathers information required to populate heat node info for evrry basic block.
+		Input: Basic Block to be analysed.
+		Output: vec has shmem library calls of interest,
+				call inst has all the shmem library call instructions, 
+				loadstorecnt populates
+					all the load, store instructions in this Basic Block.
+
+		*/
 		virtual bool isBlockOfInterest(BasicBlock &B, vector <Instruction *> &vec, vector <Instruction *> &callinst, pair<int, int> &loadstorecnt) {
 			bool interest = true;
 			int loadcnt = 0, storecnt = 0;
@@ -793,7 +849,10 @@ using namespace std;
 				termIarray.push_back(termI);
 			}
 		}
-
+		/* This assigns every instruction with a similar naming conventtion as in RDA and gets all teminal instructions.
+		Input: Function  and Index to Instruction mapping.
+		Output: Terminal instructions  and fills IndexToInstr
+		*/
 		vector<unsigned> assignIDsToInstrs(Function &F, vector<Instruction *> &IndexToInstr)
 		{
 			// Dummy instruction null has index 0;
@@ -863,10 +922,10 @@ using namespace std;
 			vector <Instruction *> insv, callinst;
 			bool loop = false;
 
-			/*errs() << "Running LivenessAnalysis Info pass \n";
-			LivenessAnalysis *rda = getAnalysis<LivenessAnalysisPass>().getLivenessAnalysisInfo();
-			rda->print();
-			errs() << "Ending Livenessanalysis\n";
+			/*
+
+			TTR: This part is supposed to give us Branch probability information. Since, this requires this pass to 
+			be a module pass. I have commented this part. This will come handy in the future.
 
 			BranchProbabilityInfo &BPI = getAnalysis<BranchProbabilityInfoWrapperPass>().getBPI();
 			LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
@@ -882,7 +941,8 @@ using namespace std;
 
 			// for every bb in a loop mark them appropriately.
 			LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
-
+			/* From the meta info we gathered so far, we populate the head node information. we also have enought data to decide on whether a
+			basic block is important to us or not. This info is cached for every Basic Block.*/
 			// iterate through each block
 			for (auto &B : Func) {
 				/*uint64_t BBprofCount = locBFI.getBlockProfileCount(&B).hasValue() ? locBFI.getBlockProfileCount(&B).getValue() : 0;
@@ -894,6 +954,7 @@ using namespace std;
 				pair<int, int> loadstorecnt;
 				loadstorecnt.first = 0;
 				loadstorecnt.second = 0;
+
 				if (isBlockOfInterest(B, insv, callinst, loadstorecnt)) {
 					heatNode *hnode = new heatNode(id, &B);
 					hnode->setfreqcount(BBfreqCount);
@@ -908,7 +969,7 @@ using namespace std;
 					errs() << " Found " << loadstorecnt.second << " store instructions\n";
 					errs() << " Display Call statistics: \n";
 					hnode->setnoofcallins(callinst.size());
-
+					/* Collecting lo store and lib load frequncy count of shmem lib calls*/
 					int libload = getlibloadinstructions(callinst);
 					int libstore = getlibstoreinstructions(callinst);
 					
@@ -927,12 +988,16 @@ using namespace std;
 						//errs() << loop->getCanonicalInductionVariable()->getName() << "\n";
 					}*/
 					//hnode->setatlcount(2);
+					/* TTR: We don't need it now. Will be done later*/
 					bool isLoop = LI.getLoopFor(&B);
 					if (isLoop) {
 						//hnode->setatlcount(1);
 						//errs() << B.getName() << " block is inside loop\n";
 						//errs() << B.getName() << " block is inside loop\n";
 					}
+					/* TTR: End*/
+
+
 					heatmp[&B] = hnode;
 					heatIDmp[id] = hnode;
 					id++;
@@ -959,7 +1024,7 @@ using namespace std;
 					// mark this heat node with that of loops entry
 				}
 			}*/
-
+			/* Loops over all loops. Tag all Basic Blocks related to loop as loop body. And selectively tag loop headers and loop tails. */
 			for (Loop *L : LI) {
 				for (BasicBlock *BB : L->getBlocks())
 				{
@@ -974,30 +1039,45 @@ using namespace std;
 				}
 
 				
-
+				// Get all the exir blocks and tag them as Loop tail
 				SmallVector<BasicBlock*, 8> ExitingBlocks;
 				L->getExitingBlocks(ExitingBlocks);
 				for (BasicBlock *ExitingBlock : ExitingBlocks)heatmp[ExitingBlock]->setatlcount(LOOP_TAIL);
 
-		
 			}
 
 
 			errs() << "\nLivenessAnalysis";
+			/* This runs the libeness anlysis algorithm. populated all required information for us to consume.*/
 			rda->runWorklistAlgorithm(&Func);
+			/* This prints reaching definitions for every edge. But we need that info just for terminal instruciton of Basic Block. 
+			This is because we are interested in block wise reaching definiiton analyis.*/
 			rda->print();
+			/* Expose edges from reaching definition analysis pass.
+				These edges are defined as forward edges and backward edges.
 
+				Edges are defined between two instructions which come one after other(forward or backward). When multiple blocks emerge from 
+				terminal instruction. It will be having mulitple edges from that instruction.
+			
+			*/
+
+			/* get edge information from the liveness analysis*/
 			auto EdgeToInfo = rda->getEdgeToInfo();
+
+			/* To make sense of edge information. we are assigning ID's to each and every instruction. */
 			vector<Instruction *> IndexToInstrv;
 			vector<unsigned> termIDs = assignIDsToInstrs(Func, IndexToInstrv);
+			
+			/* Mark all the terminal instructions as true for printing Reaching definition analysis for every block*/
 			map<unsigned, bool> termIDsmap;
-
 			for (auto el : termIDs) termIDsmap[el] = true;
 
 			errs() << "\nLivenessAnalysis for every block ";
 
+			/* For each terminal instruction we extract reaching definition analysis and insert into heat node for later use*/
 			for (auto const &it : EdgeToInfo) {
 				vector<Instruction *> tmp;
+				/* The first entry in the edge correspons to actual instruction  edge id1->id2    id1 is what we require.*/
 				if (termIDsmap.find(it.first.first) != termIDsmap.end()  /*termIDsmap.find(it.first.second) != termIDsmap.end()*/) {
 					errs() << "Edge " << it.first.first
 						<< "->"
@@ -1005,22 +1085,28 @@ using namespace std;
 						<< it.first.second << ":";
 					(it.second)->print();
 
+					// Get the parent Basic  block
 					bbt curBB = IndexToInstrv[it.first.first]->getParent();
 					errs() << "reaching instructions from this block :" << *curBB << "\n";
 
+					/* add  reaching definition info to each heat node for every basic block*/
 					for (auto el : (it.second)->getliveness_defs()) {
 						errs() << *IndexToInstrv[el] << "\n";
 						tmp.push_back(IndexToInstrv[el]);
+						heatmp[curBB]->reachingInstructions.push_back(IndexToInstrv[el]);
 					}
-					heatmp[curBB]->reachingInstructions = tmp;
+					
+					//heatmp[curBB]->reachingInstructions = tmp;
 					errs() << "\n\n\n";
 				}
 
 			}
 			//auto InstrToIndex = rda->getInstrToIndex();
 			//auto IndexToInstr = rda->getIndexToInstr();
-			errs() << "\nPrinting the instruction index mapping\n";
 
+
+			errs() << "\nPrinting the instruction index mapping\n";
+			/* This prints the instruction to ID mappping*/
 			for (auto el : IndexToInstrv) {
 				//Instruction *inst = &(*(el.second));
 				if (el == nullptr) continue;
@@ -1033,6 +1119,8 @@ using namespace std;
 
 			errs() << "\nprinting terminal instructions\n";
 
+
+			/* TTR: This has been done before*/
 			vector<Instruction *> termIarray;
 			LiveProcessAllBasicBlocks(Func, termIarray);
 			//auto termIDs = getIDsfortermarray(termIarray , IndexToInstrv);
@@ -1040,9 +1128,11 @@ using namespace std;
 			/*for (int i = 0; i < termIDs.size(); i++) {
 				errs() << "ID: " << termIDs[i] << " --> " << *termIarray[i] << "\n";
 			}*/
+			/*TTR: End*/
 
 
 			errs() << '\n';
+			/* print the heat node info finally*/
 			printheadnodeinfo();
 
 			return false;
