@@ -1,0 +1,1000 @@
+   36  ls -lrt
+   37  cd LivenessAnalysis/
+   38  ls -lrt
+   39  vim CMakeLists.txt 
+   40  ls -lrt
+   41  cd llvm_build/build/
+   42  make 
+   43  cd lib
+   44  ls
+   45  cd ../
+   46  pwd
+   47  make 
+   48  make -j2
+   49  ls -lrt
+   50  make 
+   51  cd shmem
+   52  ls
+   53  ls -lrt
+   54  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMLivenessAnalysis.so < test5.ll  > /dev/null 2> livetest5.txt
+   55  vim livetest5.txt 
+   56  history | grep opt
+   57  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMLivenessAnalysis.so -libeness < test5.ll  > /dev/null 2> livetest5.txt
+   58  vim livetest5.txt 
+   59  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMLivenessAnalysis.so -liveness < test5.ll  > /dev/null 2> livetest5.txt
+   60  vim livetest5.txt 
+   61  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < test5.ll  > /dev/null 2> test5.txt
+   62  vim test5.txt 
+   63  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < test5.ll  > /dev/null 2> test5.txt
+   64  cd llvm_build/build/
+   65  ls -lrt
+   66  make -j4
+   67  ls
+   68  ls lib/Transforms/*
+   69  cd  lib/Transforms/
+   70  ls
+   71  cd L
+   72  ls -lrt
+   73  cd LivenessAnalysis/
+   74  ls
+   75  cd ../
+   76  ls
+   77  pwd
+   78  cd ../
+   79  ls
+   80  cd ../
+   81  make -j4
+   82  cd LLVM/llvm/lib/Transforms/ls
+   83  ls
+   84  cd LLVM/llvm/lib/Transforms/LivenessAnalysis/
+   85  ls
+   86  vim RegisterLivenessAnalysis.cpp
+   87  vim CMakeLists.txt 
+   88  ls
+   89  pwd
+   90  vim RegisterLivenessAnalysis.cpp
+   91  ls
+   92  cd ../
+   93  ls
+   94  cd Scalar/
+   95  ls
+   96  vim Scalar.cpp 
+   97  cd ../
+   98  ls -lrt
+   99  ls
+  100  pwd
+  101  cd ../
+  102  ls
+  103  cd Transforms/
+  104  ls
+  105  cd LivenessAnalysis/
+  106  ls
+  107  vim ../CMakeLists.txt 
+  108  pwd
+  109  cd ..
+  110  ls
+  111  vim LLVMBuild.txt 
+  112  vim CMakeLists.txt 
+  113  cd LivenessAnalysis/
+  114  mv RegisterLivenessAnalysis.cpp  RegisterPasses.cpp
+  115  l
+  116  ls
+  117  vim RegisterPasses.cpp 
+  118  ls
+  119  vim CMakeLists.txt 
+  120  ls
+  121  vim RegisterPasses.cpp 
+  122  ls -lrt
+  123  pwd
+  124  cd 
+  125  ls
+  126  cd shmem
+  127  ls
+  128  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < test5.ll  > /dev/null 2> test5.txt
+  129  vim test5.txt 
+  130  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < test5.ll  > /dev/null 2> test5.txt
+  131  vim test5.txt 
+  132  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < test5.ll  > /dev/null 2> test5.txt
+  133  vim test5.txt 
+  134  cp ~/LLVM/llvm/lib/Transforms/LivenessAnalysis/DFA.h ~/LLVM/llvm/lib/Transforms/shmemheat/
+  135  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < test5.ll  > /dev/null 2> test5.txt
+  136  vim test5.txt 
+  137  ls -lrt
+  138  cd llvm_build/build/
+  139  make -j4
+  140  pwd
+  141  make -j4
+  142  cmake .
+  143  cmake
+  144  cmake .
+  145  cmake --build
+  146  cmake --build .
+  147  module load cmake/3.8.0 
+  148  cmake .
+  149  make -j16
+  150  make -j32
+  151  cmake .
+  152  make -j32
+  153  make -j4
+  154  make -j64
+  155  cmake .
+  156  make -j64
+  157  cd LLVM/llvm/lib/Transforms/shmemheat/
+  158  git status
+  159  git add shmemheatpass.cpp DFA.h 
+  160  git commit -m "added LVA"
+  161  git push origin master
+  162  ls -lrt
+  163  git status
+  164  cd sampath/
+  165  ls
+  166  mkdir kick
+  167  cd kick/
+  168  ls
+  169  1.cpp
+  170  touch 1asg.cpp
+  171  g++ 1asg.cpp 
+  172  3
+  173  11 1 2
+  174  8
+  175  2 3
+  176  11 11 11
+  177  1 2 3 4 5 6 7 8 9 10 11
+  178  1000 6 1
+  179  4 8 15 16 23 42
+  180  ./a.out 
+  181  g++ 1asg.cpp 
+  182  ./a.out 
+  183  g++ 1asg.cpp 
+  184  ./a.out 
+  185  cd sampath/
+  186  ls
+  187  cd kick/
+  188  ls
+  189  g++ 1asg.cpp 
+  190  ./a.out 
+  191  ls -lrt
+  192  cd LLVM/llvm/lib/Transforms/shmemheat/
+  193  touch LivenessInfo.h
+  194  vim LivenessInfo.h
+  195  ls -lrt
+  196  ls
+  197  ls -lrt
+  198  cd llvm_build/build/
+  199  ls -lrt
+  200  make -j2
+  201  ls -lrt
+  202  clear
+  203  make -j2
+  204  cd llvm_build/build/
+  205  make -j2
+  206  ls -lrt
+  207  cd llvm_build/build/
+  208  make -j2
+  209  ls -lrt
+  210  ls
+  211  pwd
+  212  cd ../../
+  213  l
+  214  ls
+  215  cd LLVM/llvm/lib/Transforms/shmemheat/
+  216  ls
+  217  cd test_examples/
+  218  ls
+  219  vim block_sample.c
+  220  cp test1.c block_sample.c 
+  221  vim block_sample.c 
+  222  ls -lrt
+  223  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  224  ls
+  225  clang -emit-llvm -S block_sample.c -o block_sample.ll
+  226  vim block_sample.ll 
+  227  vim block_sample.ll
+  228  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < block_sample.ll  > /dev/null 2> block_sample.txt
+  229  vim block_sample.txt 
+  230  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  231  vim block_sample.ll 
+  232  cd LLVM/llvm/lib/Transforms/
+  233  ls -lrt
+  234  mkdir BlockSplitter
+  235  ls -lr
+  236  cd BlockSplitter/
+  237  ls
+  238  cp ../ProgramInfo/* *
+  239  cp ../ProgramInfo/* .
+  240  ls
+  241  mv ProgramInfo.cpp BlockSplitter.cpp
+  242  vim CMakeLists.txt 
+  243  ls -lrt
+  244  ls
+  245  cd ../
+  246  ls -lrt
+  247  cd shmemheat/
+  248  ls -lrt
+  249  ls -ltr
+  250  ls -lrt
+  251  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  252  cd test_examples/
+  253  ls
+  254  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  255  ls -lrt
+  256  vim block_sample.txt 
+  257  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  258  vim block_sample.txt 
+  259  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  260  vim block_sample.txt 
+  261  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  262  vim block_sample.txt 
+  263  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  264  vim block_sample.txt 
+  265  ls -lrt
+  266  vim block_sample.ll 
+  267  vim block_sample.txt 
+  268  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  269  vim block_sample.txt 
+  270  cd llvm_build/build/
+  271  make -j4
+  272  cd LLVM/llvm/lib/Transforms/shmemheat/
+  273  ls
+  274  cd test_examples/
+  275  ls
+  276  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  277  vim block_sample.txt 
+  278  ls
+  279  vim block_sample.ll 
+  280  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  281  vim block_sample.txt 
+  282  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  283  vim block_sample.txt 
+  284  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  285  vim block_sample.txt 
+  286  ls -lrt
+  287  clear
+  288  cd llvm_build/build/
+  289  ls
+  290  make -j2
+  291  cd LLVM/llvm/lib/Transforms/
+  292  mkdir LLVMShmemFtPasses
+  293  vim CMakeLists.txt 
+  294  cp BlockSplitter/BlockSplitter.cpp LLVMShmemFtPasses/
+  295  cp shmemheat/* LLVMShmemFtPasses/
+  296  ls
+  297  cd LLVMShmemFtPasses/
+  298  ls
+  299  vim CMakeLists.txt 
+  300  touch RegisterPasses.cpp
+  301  ls
+  302  cd ../
+  303  ls
+  304  cd shmemheat/
+  305  ls
+  306  cd test_examples/
+  307  ls
+  308  vim block_sample.txt 
+  309  cd llvm_build/build/
+  310  make -j2
+  311  cmake -DCMAKE_BUILD_TYPE=Release /gpfs/home/ksampathkuma/LLVM/llvm/
+  312  module load cmake/3.5.1 
+  313  cmake -DCMAKE_BUILD_TYPE=Release /gpfs/home/ksampathkuma/LLVM/llvm/
+  314  ls
+  315  cd ../../
+  316  ls
+  317  cd LLVM/llvm/
+  318  ls
+  319  vim CMakeLists.txt 
+  320  cmake --build .
+  321  cd ../
+  322  ls
+  323  cd ../
+  324  ls
+  325  cd llvm_build/
+  326  ls
+  327  cd build/
+  328  ls
+  329  cd ../../LLVM/llvm/
+  330  vim README.txt 
+  331  cd docs/
+  332  ls
+  333  vim WritingAnLLVMPass.rst 
+  334  vim README.txt 
+  335  vim Passes.rst 
+  336  cd ../
+  337  ls
+  338  cd ../
+  339  pwd
+  340  cd ./.
+  341  ls
+  342  cd ../
+  343  l
+  344  sls
+  345  ls
+  346  pwd
+  347  cd llvm_build/build/
+  348  make -j2
+  349  ls
+  350  cd ../../LLVM/llvm/lib/Transforms/
+  351  cp Vectorize/LLVMBuild.txt  LLVMShmemFTPasses/
+  352  cd LLVMShmemFTPasses/
+  353  vim LLVMBuild.txt 
+  354  ls
+  355  pwd
+  356  cd ~
+  357  ls
+  358  cd llvm_build/build/
+  359  make -j2
+  360  cmake .
+  361  cd llvm_build/build/
+  362  make -j2
+  363  ls
+  364  cd ../../LLVM/llvm/lib/Transforms/
+  365  ls -lrt
+  366  vim CMakeLists.txt 
+  367  ls
+  368  cd LLVMShmemFTPasses/
+  369  ls
+  370  vim CMakeLists.txt 
+  371  ls
+  372  cd ../
+  373  ls
+  374  vim LLVMBuild.txt 
+  375  ls -lrt
+  376  pwd
+  377  cd -
+  378  ls
+  379  cd ~/llvm_build/build/
+  380  make -j2
+  381  vim ~/LLVM/llvm/lib/Transforms/LLVMBuild.txt 
+  382  cd  ~/LLVM/llvm/lib/Transforms
+  383  ls
+  384  vim LLVMBuild.txt 
+  385  cd -
+  386  ls
+  387  make -j2
+  388  vim ~/LLVM/llvm/tools/opt/LLVMBuild.txt 
+  389  vim ~/LLVM/llvm/tools/opt/CMakeLists.txt 
+  390  make -j2
+  391  vim ~/LLVM/llvm/tools/opt/CMakeLists.txt 
+  392  vim ~/LLVM/llvm/tools/opt/LLVMBuild.txt 
+  393  ls -lrt
+  394  sl -lrt
+  395  ls -lrt
+  396  pwd
+  397  cd ~/LLVM/llvm/lib/Transforms/
+  398  ls
+  399  vim LLVMBuild.txt 
+  400  ls
+  401  vim CMakeLists.txt 
+  402  cd LLVMShmemFTPasses/
+  403  ls
+  404  vim README.md 
+  405  vim LLVMBuild.txt 
+  406  ls -lrt
+  407  cd ~/llvm_build/build/
+  408  make -j2
+  409  cmake -DCMAKE_BUILD_TYPE=Release /gpfs/home/ksampathkuma/LLVM/llvm/
+  410  module load cmake/3.5.1 
+  411  cmake -DCMAKE_BUILD_TYPE=Release /gpfs/home/ksampathkuma/LLVM/llvm/
+  412  ls
+  413  cd ~/LLVM/llvm/
+  414  ls
+  415  vim CMakeLists.txt 
+  416  cd docs/
+  417  ls
+  418  vim LLVMBuild.txt 
+  419  cd tutorial/
+  420  ls
+  421  cd ../
+  422  pwd
+  423  cd ../lib/Transforms/
+  424  ls
+  425  cd LoopInfo/
+  426  ls
+  427  cd ../
+  428  ls
+  429  cd Hello/
+  430  ls
+  431  vim CMakeLists.txt 
+  432  cd ../
+  433  ls
+  434  cd Utils/
+  435  ls
+  436  vim Utils.cpp 
+  437  vim CMakeLists.txt 
+  438  vim LLVMBuild.txt 
+  439  ls
+  440  cd ../
+  441  ls
+  442  vim LLVM
+  443  vim LLVMBuild.txt 
+  444  vim ~/LLVM/llvm/include/llvm/PassRegistry.h 
+  445  vim ~/LLVM/llvm/include/llvm/InitializePasses.h 
+  446  vim ~/LLVM/llvm/tools/opt/LLVMBuild.txt 
+  447  vim ~/LLVM/llvm/tools/opt/CMakeLists.txt 
+  448  vim ~/LLVM/llvm/lib/Transforms/LLVMShmemFTPasses/
+  449  vim ~/LLVM/llvm/lib/Transforms/LLVMShmemFTPasses/CMakeLists.txt 
+  450  vim ~/LLVM/llvm/lib/Transforms/LLVMShmemFTPasses/LLVMBuild.txt 
+  451  vim ~/LLVM/llvm/lib/Transforms/Utils/LLVMBuild.txt 
+  452  cd ~/llvm_build/build/
+  453  make -j2
+  454  ls -lrt
+  455  make -j2
+  456  cmake .
+  457  cmake -DCMAKE_BUILD_TYPE=Release /gpfs/home/ksampathkuma/LLVM/llvm/
+  458  ls
+  459  make -j2 
+  460  make -j16
+  461  cmake .
+  462  make -j16
+  463  cmake .
+  464  make -j16
+  465  cmake .
+  466  make -j16
+  467  cmake .
+  468  make -j16
+  469  make -j2
+  470  cmake .
+  471  make -j2
+  472  make -j16
+  473  cmake .
+  474  make -j16
+  475  cmake .
+  476  make -j16
+  477  cmake .
+  478  make -j8
+  479  vim ~/LLVM/llvm/lib/Transforms/ShmemFaultTolerance/HelperUtil.h
+  480  cmake .
+  481  make -j8
+  482  vim ~/LLVM/llvm/lib/Transforms/ShmemFaultTolerance/HelperUtil.h
+  483  cmake .
+  484  make -j8
+  485  vim ~/LLVM/llvm/lib/Transforms/ShmemFaultTolerance/HelperUtil.h
+  486  cmake .
+  487  make -j8
+  488  vim ~/LLVM/llvm/lib/Transforms/ShmemFaultTolerance/HelperUtil.h
+  489  cmake .
+  490  make -j8
+  491  cmake .
+  492  make -j8
+  493  cmake .
+  494  make -j8
+  495  cmake .
+  496  make -j8
+  497  cmake .
+  498  make -j8
+  499  cmake .
+  500  make -j16
+  501  cmake .
+  502  make -j64
+  503  make -j32
+  504  ls -lrt
+  505  cd LLVM/llvm/
+  506  ls
+  507  cd docs/
+  508  ls
+  509  cd ~
+  510  cd llvm_build/build/
+  511  cd lib
+  512  ls
+  513  opt --help
+  514  opt -help
+  515  opt -help-list
+  516  opt -help-list > test.txt
+  517  vim test.txt 
+  518  ls -lrt
+  519  pwd
+  520  cd ../
+  521  ls
+  522  cmake -j64
+  523  module load cmake/3.5.1 
+  524  cmake -j64
+  525  pwd
+  526  ls
+  527  make -j64
+  528  cd lib
+  529  ls
+  530  opt -help-list > test.txt
+  531  vim test.txt 
+  532  cd LLVM/llvm/lib/Transforms/
+  533  ls
+  534  cd ProgramInfo/
+  535  ls
+  536  cd ../
+  537  mkdir ModifyIR && cp ProgramInfo/* ModifyIR
+  538  cd ModifyIR/
+  539  ls
+  540  mv ProgramInfo.cpp ModifyIR.cpp
+  541  vim CMakeLists
+  542  vim CMakeLists.txt 
+  543  cd ../
+  544  vim CMakeLists.txt 
+  545  cd ModifyIR/
+  546  cd llvm_build/build/lib
+  547  ls
+  548  pwd
+  549  cd ../
+  550  ls
+  551  pwd
+  552  make -j4
+  553  cd llvm_build/build/
+  554  make -j4
+  555  ls -lrt
+  556  cd ~/LLVM/llvm/lib/Transforms/ModifyIR/
+  557  cp ModifyIR.cpp  ../ShmemFaultTolerance/
+  558  cd ../ShmemFaultTolerance/
+  559  ls
+  560  vim LLVMBuild.txt 
+  561  vim CMakeLists.txt 
+  562  vim LLVMBuild.txt 
+  563  vim RegisterPasses.cpp 
+  564  ls -lrt
+  565  cd ~/LLVM/llvm/include/
+  566  ls
+  567  cd llvm
+  568  ls
+  569  pwd
+  570  cd ~/LLVM/llvm/
+  571  cd 
+  572  cd ~
+  573  cd llvm_build/build/
+  574  make -j4
+  575  ls -lt
+  576  ls -lrt
+  577  clear
+  578  make -j4
+  579  cd llvm_build/build/
+  580  make -j4
+  581  ls -ltr
+  582  make -j4
+  583  ls -lrt
+  584  clear
+  585  ls -lrt
+  586  clear
+  587  pwd
+  588  cd ../../LLVM/llvm/lib/Transforms/ShmemFaultTolerance/
+  589  ls
+  590  cd ../
+  591  ls
+  592  cd shmemheat/
+  593  ls
+  594  ls -lrt
+  595  cd test_examples/
+  596  history | grep opt
+  597  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  598  vim block_sample.txt 
+  599  ls -lrt
+  600  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  601  ls -lrt
+  602  vim modify_block_sample.txt 
+  603  vim block_sample.ll 
+  604  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  605  vim modify_block_sample.txt 
+  606  ls -lrt
+  607  clear
+  608  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  609  vim modify_block_sample.txt 
+  610  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  611  vim modify_block_sample.txt 
+  612  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  613  vim modify_block_sample.txt 
+  614  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  615  vim modify_block_sample.txt 
+  616  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  617  vim modify_block_sample.txt 
+  618  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMModifyIR.so -ModifyIR < block_sample.ll  > /dev/null 2> modify_block_sample.txt
+  619  cd llvm_build/build/lib
+  620  ls
+  621  rm LLVMBlockSplitter.so  LLVMLivenessAnalysis.so  LLVMModifyIR.so LLVMshmemheatpass.so 
+  622  cd ../
+  623  make -j4
+  624  cd lib
+  625  ls
+  626  rm LLVMshmemheatpass.so 
+  627  cd ../
+  628  cd lib
+  629  rm LLVMShmemFaultTolerance.so 
+  630  ls
+  631  cd ./.
+  632  cd ../
+  633  make -j4
+  634  cd lib
+  635  ls
+  636  cd ../
+  637  ls
+  638  ls -lrt
+  639  make -j4
+  640  l s-lrt
+  641  ls -lrt
+  642  cd LLVM/llvm/lib/Transforms/ShmemFaultTolerance/
+  643  ls
+  644  cd ../
+  645  ls
+  646  cd shmemheat/test_examples/
+  647  ls
+  648  vim modify_block_sample.txt 
+  649  history | grep opt
+  650  vim block_sample.txt 
+  651  clang -emit-llvm -S block_sample.c -o new_block_sample.ll
+  652  vim new_block_sample.ll 
+  653  ls
+  654  history
+  655  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMshmemheatpass.so -shmemheat < block_sample.ll  > /dev/null 2> block_sample.txt
+  656  vim block_sample.txt 
+  657  ls
+  658  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  659  vim block_sample.txt 
+  660  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  661  vim block_sample.txt 
+  662  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -BlockSplitterPass < block_sample.ll  > /dev/null 2> block_sample.txt
+  663  vim block_sample.txt 
+  664  clang -emit-llvm -O0 -S block_sample.c -o lastest_block_sample.ll
+  665  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -BlockSplitterPass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  666  vim block_sample.txt 
+  667  s
+  668  ls
+  669  vim modify_block_sample.txt 
+  670  vim block_sample.txt 
+  671  history
+  672  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatPass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  673  vim block_sample.txt 
+  674  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  675  vim block_sample.txt 
+  676  ls
+  677  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  678  vim block_sample.txt 
+  679  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitter < block_sample.ll  > /dev/null 2> block_sample.txt
+  680  vim block_sample.txt 
+  681  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitterPass < block_sample.ll  > /dev/null 2> block_sample.txt
+  682  vim block_sample.txt 
+  683  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  684  history | grep opt 
+  685  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  686  vim block_sample.txt 
+  687  ls -lrt
+  688  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  689  vim block_sample.txt 
+  690  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  691  vim block_sample.txt 
+  692  cd llvm_build/build/
+  693  make -j4
+  694  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  695  ls -lrt
+  696  vim block_sample.txt 
+  697  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  698  vim block_sample.txt 
+  699  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  700  vim block_sample.txt 
+  701  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  702  vim block_sample.txt 
+  703  cd llvm_build/build/
+  704  make -j4 
+  705  cd llvm_build/build/
+  706  make -j4
+  707  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  708  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  709  vim block_sample.txt 
+  710  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  711  vim block_sample.txt 
+  712  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  713  vim block_sample.txt 
+  714  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  715  vim block_sample.txt 
+  716  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  717  vim block_sample.txt 
+  718  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  719  vim block_sample.txt 
+  720  cd llvm_build/build/
+  721  make -j4
+  722  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  723  ls
+  724  vim test2.txt 
+  725  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  726  ls
+  727  ls -lrt
+  728  vim test1.
+  729  vim test1.c 
+  730  vim test2.ll 
+  731  vim test2.c 
+  732  clang -emit-llvm -O3 -S test2.c -o test2.ll 
+  733  vim test2.ll 
+  734  vim test2.c 
+  735  clang -emit-llvm -O3 -S test2.c -o test2.ll 
+  736  vim test2.ll 
+  737  vim test2.c 
+  738  clang -emit-llvm -O0 -S test2.c -o test2.ll 
+  739  vim test2.ll 
+  740  history | grep opt 
+  741  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> block_sample.txt
+  742  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  743  vim test2.txt 
+  744  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  745  vim test2.txt 
+  746  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  747  vim test2.
+  748  vim test2.txt 
+  749  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  750  vim test2.txt 
+  751  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  752  vim test2.ll 
+  753  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  754  vim test2.ll 
+  755  vim test2.txt 
+  756  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  757  vim test2.txt 
+  758  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  759  vim test2.txt 
+  760  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  761  vim test2.txt 
+  762  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  763  vim test2.txt 
+  764  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  765  vim test2.txt 
+  766  ls -lrt
+  767  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  768  vi test2.txt 
+  769  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test2.ll  > /dev/null 2> test2.txt 
+  770  vi test2.txt 
+  771  cd llvm_build/build/
+  772  make -j4
+  773  cd ls
+  774  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  775  ls -lrt
+  776  vim block_sample.
+  777  vim block_sample.txt 
+  778  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  779  vim block_sample.txt 
+  780  vim lastest_block_sample.ll 
+  781  ls -lrt
+  782  vim block_sample.txt 
+  783  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  784  vim block_sample.txt 
+  785  vim lastest_block_sample.ll 
+  786  cd llvm_build/build/
+  787  make -j4
+  788  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  789  history
+  790  ls -lrt
+  791  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  792  vim block_sample.txt 
+  793  cd llvm_build/build/
+  794  make -j4
+  795  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  796  ls -lrt
+  797  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  798  vim block_sample.txt 
+  799  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  800  vim block_sample.txt 
+  801  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  802  vim block_sample.txt 
+  803  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  804  vim block_sample.txt 
+  805  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  806  vim block_sample.txt 
+  807  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  808  vim block_sample.txt 
+  809  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  810  vim block_sample.txt 
+  811  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  812  vim block_sample.txt 
+  813  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  814  vim block_sample.txt 
+  815  cd llvm_build/build/
+  816  make -j4
+  817  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  818  ls -lrt
+  819  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  820  vim block_sample.txt 
+  821  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  822  vim block_sample.txt 
+  823  cd llvm_build/build/
+  824  make -j4
+  825  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  826  vim block_sample.txt 
+  827  ls -lrt
+  828  vim lastest_block_sample.ll 
+  829  ls -lrt
+  830  clear
+  831  cd llvm_build/build/
+  832  make -j4
+  833  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  834  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  835  vim block_sample.txt 
+  836  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  837  ls
+  838  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  839  vim block_sample.txt 
+  840  ls -lrt
+  841  clear
+  842  cd llvm_build/build/
+  843  make -j4
+  844  ls -lrt
+  845  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  846  ls
+  847  vim block_sample.c 
+  848  clang -emit-llvm -g -O0 -S block_sample.c -o lastest_block_sample.ll 
+  849  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  850  vim block_sample.txt 
+  851  cd ../
+  852  ls
+  853  cd ../ShmemFaultTolerance/
+  854  vim shmemheat.cpp 
+  855  cd ../shmemheat/test_examples/
+  856  vim block_sample.txt 
+  857  vim lastest_block_sample.ll 
+  858  ls -lrt
+  859  vim lastest_block_sample.ll 
+  860  vim block_sample.c 
+  861  vim lastest_block_sample.ll 
+  862  clear
+  863  ls -lrt
+  864  clea
+  865  clear
+  866  ls
+  867  clang -emit-llvm -g -O3 -S block_sample.c -o lastest_block_sample.ll 
+  868  #opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  869  vim lastest_block_sample.ll 
+  870  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  871  vim block_sample.txt 
+  872  vim lastest_block_sample.ll 
+  873  clang -emit-llvm -O3 -S block_sample.c -o lastest_block_sample.ll 
+  874  vim lastest_block_sample.ll 
+  875  clang -emit-llvm -O0 -S block_sample.c -o lastest_block_sample.ll 
+  876  vim lastest_block_sample.ll 
+  877  clang -emit-llvm -O0 -S block_sample.c -o lastest_block_sample.ll 
+  878  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  879  vim block_sample.txt 
+  880  clang -emit-llvm -O0 -S block_sample.c -o lastest_block_sample.ll 
+  881  opt -load -O3 /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  882  vim block_sample.txt 
+  883  opt -O3 -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  884  vim block_sample.txt 
+  885  opt -O0 -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  886  vim block_sample.txt 
+  887  cd llvm_build/build/
+  888  make -j4
+  889  cd llvm_build/build/
+  890  make -j4
+  891  cd ~
+  892  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  893  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  894  vim block_sample.txt 
+  895  ls -lrt
+  896  cd llvm_build/build/
+  897  make -j4
+  898  cd ~
+  899  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  900  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  901  vim block_sample.txt 
+  902  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  903  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  904  vim block_sample.txt 
+  905  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  906  vim block_sample.txt 
+  907  cd llvm_build/build/
+  908  make -j4
+  909  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  910  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  911  vim block_sample.txt 
+  912  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  913  vim block_sample.txt 
+  914  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt && vim block_sample.txt 
+  915  vim block_sample.txt 
+  916  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  917  vim block_sample.txt 
+  918  ls
+  919  cd ../
+  920  ls
+  921  cd ../
+  922  cd ShmemFaultTolerance/
+  923  ls -lrt
+  924  git remote add origin https://github.com/sampathkumar81293/ShmemFaultTolerance.git
+  925  cd ../shmemheat/
+  926  ls -lrt
+  927  cd test_examples/
+  928  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  929  vim block_sample.txt 
+  930  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  931  vim block_sample.txt 
+  932  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  933  vim block_sample.txt 
+  934  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  935  vim block_sample.txt 
+  936  cd llvm_build/build/
+  937  make -j4
+  938  ls -lrt
+  939  clear
+  940  ls
+  941  make -j4
+  942  cd llvm_build/build/
+  943  make -j4
+  944  cd 
+  945  cd ~
+  946  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  947  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  948  vim block_sample.txt 
+  949  vim lastest_block_sample.ll 
+  950  ls
+  951  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> test3.txt 
+  952  vim test3.txt 
+  953  ls -lrt
+  954  clear
+  955  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  956  vim test3.txt 
+  957  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < test3.ll  > /dev/null 2> test3.txt 
+  958  vim test3.txt 
+  959  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  960  vim block_sample.txt 
+  961  cd ~
+  962  cd llvm_build/build/
+  963  make -j4
+  964  ls -lrt
+  965  cd -
+  966  cd LLVM/llvm/lib/Transforms/shmemheat/test_examples/
+  967  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -shmemheatpass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  968  vim block_sample.txt 
+  969  ls
+  970  cd ../
+  971  ls
+  972  cd ..
+  973  cd ShmemFaultTolerance/
+  974  ls -lrt
+  975  git init
+  976  git add --all
+  977  git commit -m "initial repository"
+  978  git remote add origin https://github.com/sampathkumar81293/ShmemFaultTolerance.git
+  979  git remote -v
+  980  git push origin master
+  981  ls -lrt
+  982  cd ../shmemheat/test_examples/
+  983  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMBlockSplitter.so -BlockSplitterPass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  984  vim block_sample.txt 
+  985  opt -load /gpfs/home/ksampathkuma/llvm_build/build/lib/LLVMShmemFaultTolerance.so -BlockSplitterPass < lastest_block_sample.ll  > /dev/null 2> block_sample.txt
+  986  vim block_sample.txt 
+  987  vim lastest_block_sample.ll 
+  988  vim block_sample.txt 
+  989  vim lastest_block_sample.ll 
+  990  cd ../../ShmemFaultTolerance/
+  991  git status
+  992  git add BlockSplitter.cpp shmemheat.cpp 
+  993  git commit -m "added commnets for BlockSplitter"
+  994  git push origin master
+  995  vim README.md 
+  996  git status
+  997  git add BlockSplitter.cpp  README.md shmemheat.cpp  shmemHeatInfo.h 
+  998  git commit -m "added more comments"
+  999  git push 
+ 1000  git push origin master
+ 1001  cd LLVM/llvm/lib/Transforms/ShmemFaultTolerance/
+ 1002  ls -lrt
+ 1003  git status
+ 1004  git add shmemheat.cpp 
+ 1005  git commit -m "adding more comments"
+ 1006  git push origin master
+ 1007  cd ~
+ 1008  cd llvm_build/build/
+ 1009  make -j4
+ 1010  xs -
+ 1011  cd ~
+ 1012  cd LLVM/llvm/lib/Transforms/ShmemFaultTolerance/.git/
+ 1013  cd ../
+ 1014  s
+ 1015  ls
+ 1016  git status
+ 1017  git add shmemheat.cpp 
+ 1018  git commit -m "added more comments"
+ 1019  git push origin master
+ 1020  ls -lrt
+ 1021  git status
+ 1022  git add DFA.h LivenessInfo.h 
+ 1023  git commit -m "few comments for DFS"
+ 1024  git push origin master
+ 1025  git status
+ 1026  git add README.md 
+ 1027  git commit -m "pointers to adding llvm passes to opt"
+ 1028  git push origin master
+ 1029  git stauts
+ 1030  git statu
+ 1031  git status
+ 1032  git add ModifyIR.cpp 
+ 1033  git commit -m "added cmts for Modify IR"
+ 1034  git push origin master
+ 1035  history > sample.txt
