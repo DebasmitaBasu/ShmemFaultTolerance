@@ -26,6 +26,11 @@
 #include <vector>
 #include <stack>
 
+
+/*
+ This pass runs the reaching definition analysis. It populates the information on runWorklistAlgorithm function call.
+
+*/
 namespace llvm {
 
 
@@ -185,6 +190,12 @@ namespace llvm {
 
 				// If there is at least one phi node, add an edge from the first phi node
 				// to the first non-phi node instruction in the basic block.
+				/*
+				 ph1
+				 ph2
+				 ph3
+				 non phi
+				*/
 				if (isa<PHINode>(firstInstr)) {
 					addEdge(firstInstr, block->getFirstNonPHI(), &Bottom);
 				}

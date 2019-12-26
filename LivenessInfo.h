@@ -1,5 +1,8 @@
 ﻿
-
+//	Taken from UCSD assignment
+//	https://ucsd-pl.github.io/cse231/wi19/part3.html
+//	https://ucsd-pl.github.io/cse231/wi19/tutorials/Dataflow-Analysis-Project.pdf
+//	https://github.com/TeoZosa/CSE231/tree/master/Passes/DFA
 
 
 #define NDEBUG
