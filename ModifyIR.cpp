@@ -21,7 +21,12 @@
 #include <map>
 #include "HelperUtil.h"
 
+/*
 
+This pass modifies the IR to add stub checkpointing calls. This comes as a third pass which works onthe information given out by shmemheat pass.
+
+
+*/
 using namespace llvm;
 using namespace std;
 //const int DEFAULT = 10;
@@ -106,6 +111,8 @@ namespace
 				}
 			}
 		}
+		/*  This function add an instruction to insert checkpoint() call into the IR. This call is inserted 
+		right after the instruction el given as an input*/
 
 		void createFunction(Instruction *el, Function &F) {
 
@@ -114,6 +121,8 @@ namespace
 			LLVMContext &Ctx = F.getContext();
 			std::vector<Type*> paramTypes;
 			std::vector<Value*> Args;
+
+			// set the return type of the checkpoint () call
 			Type *retType = Type::getInt8PtrTy(Ctx);
 
 			//paramTypes.push_back(Type::getDoubleTy(Ctx);
@@ -121,14 +130,17 @@ namespace
 			//Args.push_back(op->getOperand(0));
 			//int (double)
 			errs() << " \t Try modifying the IR";
+			/* Create a function type with the checkpoint return and argument types as arguments */
 			FunctionType *insertFuncType = FunctionType::get(retType, paramTypes, false);
 			errs() << " \t Try modifying the IR";
 			// Now chose the function type which one to use 
 			int funcVal = 0;
 			std::string newFuncName = checkpointFuncName[funcVal];
 			
+			/* Inserts the function call checkpoint() with newFuncname and insertFucntype return type*/
 			Constant *newFunc = F.getParent()->getOrInsertFunction(newFuncName, insertFuncType);
 			errs() << " \t Try modifying the IR";
+			/* creates a call instruction with all prefilled entries*/
 			CallInst *NewCI = CallInst::Create(newFunc, Args);
 
 			//ReplaceInstWithInst(op, (NewCI));
@@ -136,6 +148,7 @@ namespace
 			errs() << " \t Try modifying the IR insert";
 
 			//(pr.second)->getInstList().push_back(NewCI);
+			/* This is where the magic happens. We inserted a new instruction into IR.*/
 			NewCI->insertAfter(el);
 
 			// printing the information to the consol
@@ -159,6 +172,7 @@ namespace
 				errs() << " \t Processing ";
 			}
 			errs() << " \t Try modifying the IR";
+			/*  For every instruction that ends with a sync routine we modify the IR to add a checkpoint() call*/
 			for (auto el : cibookkeep) {
 				/*IRBuilder Builder(el);
 				Value *StoreAddr = Builder.CreatePtrToInt(si->getPointerOperand(), Builder.getInt32Ty());
