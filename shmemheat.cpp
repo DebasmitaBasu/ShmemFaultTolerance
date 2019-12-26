@@ -62,6 +62,7 @@ using namespace llvm;
 using namespace std;
 
 //typedef std::pair<unsigned, unsigned> Edge;
+/* helper to get the function. Currently not using it*/
 
 	string ParseFunctionName(CallInst *call) {
 		auto *fptr = call->getCalledFunction();
@@ -85,9 +86,12 @@ using namespace std;
 
 		// call intruction and it's operands involved for alloca
 		vector < CallMetaInfo *>  callinstvec;
+		/* Mapping between a call instruction and it's corresponding CallMetainfo entry*/
 		map < CallInst *, CallMetaInfo* > Callinst2AllocaMap;
 		map <string, int> functionMap;
+		/* mapping between Basic Block and it's corrresponding head node*/
 		map < bbt, heatNode *> heatmp;
+		/* mapping between Basic Block ID and it's corrresponding head node. Just in case. May come handy*/
 		map < int, heatNode *> heatIDmp;
 		//std::map<unsigned, BasicBlock::iterator> IndexToInstr;
 		map< string, int> functionToCodeMap;
@@ -95,6 +99,9 @@ using namespace std;
 		int id = 1;
 		//shmemheat() : BlockFrequencyInfoWrapperPass() {}
 		LivenessInfo bottom, initialState;
+		/* Instance of liveness analysis which will be invoked in this pass. 
+		This is a work around to ensure dependency on Liveness Analysis. The right 
+		way is to expose LivenessAnalysis as an independent pass.*/
 		LivenessAnalysis *rda;
 
 		shmemheat() : FunctionPass(ID) {
@@ -187,7 +194,10 @@ using namespace std;
 		}
 
 		/*
-		 * This function prints the function arguments
+		 * This function prints the function arguments. 
+		 *  Additionally, it gets corresponding alloca instruction for every operand of the call instruction.
+		 *  Input: Operand typecasted into Instruction,  va (vector of alloca instructions linked to  out input Instruction)
+		 *  Output: A vector of Alloca instructions for the given instruction.
 		 */
 
 
@@ -201,6 +211,8 @@ using namespace std;
 			bool flag = true;
 			while (!s.empty()) {
 				ii = s.top(); s.pop();
+
+				/*  set of all variables used at our instruction ii. We go recursively upwards until we reach an alloca instruction. */
 				for (Use &U : ii->operands()) {
 					Value *v = U.get();
 					errs() << "\n\t\t\t\t \"  starting on : " << *v << "\n";
@@ -209,6 +221,7 @@ using namespace std;
 						//flag = true;
 						ii = dyn_cast<Instruction>(v);
 						s.push(ii);
+						/* Checks if ii is an instance of Alloca instruction */
 						if (AllocaInst *alloca = dyn_cast_or_null<AllocaInst>(ii)) {
 							va.push_back(ii);
 							errs() << "\n\"  processing " << *dyn_cast<Instruction>(v) << "\n\t" << "\"" << " -> " << "\"" << *ii << "\"" << ";\n";
@@ -217,8 +230,12 @@ using namespace std;
 				}
 			}
 		}
-
-		void PrintFunctionArgs(CallInst *ci, CallMetaInfo *cmi) {
+		/* This helper function deals with printing the call meta info for a given call instruction.
+		This is more like a debug print output of CallMetaInfo.
+		Input:  Call instruction and it's corresponsing Callmetainfo.
+		Output: This function makes entries into CallMetaInfo with that of it's operands primary Alloca bases.
+		*/
+		void PrintFunctionArgsCallMetaInfo(CallInst *ci, CallMetaInfo *cmi) {
 			// gets function name from the call instruction
 			string cname = dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts())->getName().str();
 			// We check fucntions which contains get and put functions. We match the function string cname with selected patterns.
@@ -226,7 +243,7 @@ using namespace std;
 			LoadInst *li1, *li2;
 
 			errs() << "Iterating over the operands on the call instruction\n";
-
+			/* Iterate over every operand in the given call instruction.*/
 			for (Use &U : ci->operands()) {
 				vector <Instruction *> va;
 				va.clear();
@@ -234,7 +251,7 @@ using namespace std;
 
 				if (dyn_cast<Instruction>(v)) {
 					//errs() << "\n\"" << *dyn_cast<Instruction>(v) << "\n\t" << "\"" << " -> " << "\"" << *ci << "\"" << ";\n";
-
+					/* Go find alloca bases for every operand in the call instruction.*/
 					get_allocainst_for_every_operand(dyn_cast<Instruction>(v), va);
 					for (int i = 0; i < va.size(); i++) {
 						errs() <<  i << " 'th alloca map: " << *(va[i]) << "\n";
@@ -260,7 +277,7 @@ using namespace std;
 				v2 = ci->getArgOperand(1);
 				v3 = ci->getArgOperand(2);
 				v4 = ci->getArgOperand(3);
-
+				/* Not sure if we need this. This just peeks into alloca bases of the Value (operand) of call instructions*/
 				peek_into_alloca_mappings(v1);
 				peek_into_alloca_mappings(v2);
 
@@ -320,6 +337,7 @@ using namespace std;
 		int getNoOfNodes() {
 			return id - 1;
 		}
+		/*  We ensure that these passes are run before the runonFunction() call*/
 
 		void getAnalysisUsage(AnalysisUsage &AU) const {
 			//AU.addRequired<BranchProbabilityInfoWrapperPass>();
@@ -340,7 +358,7 @@ using namespace std;
 			errs() << "\n\t Call instructions:\t" << functionMap["call"];
 			errs() << '\n';
 		}
-
+		/* Helper function to print Basic Block related information at one go.*/
 		void printheadnodeinfo() {
 
 			int nodesize = getNoOfNodes();
@@ -362,6 +380,21 @@ using namespace std;
 				errs() << "\n";
 			}
 		}
+		/* Input: String name extracted from Call Site Instruction
+			e.g shmem_init extracted from IR Call instruction @shmem_init()
+
+   Output:
+			A user defined map between the shmem functions and it's correspinding ID.
+			This information can be passed in as an alternate input to make it more
+			generic based so as to work with other libraries.
+			e.g
+			shmem_init 1
+			shmem_put  2
+			shmem_get  3
+			default    4
+ Used by:  ProcessBasicBlock()
+
+*/
 		int GetFunctionID(string &cname) {
 			/*
 			shmem_init 1
@@ -392,14 +425,30 @@ using namespace std;
 			}
 			return value;
 		}
+
+		/*
+	 Processes the given BB and prints callMetainfo
+	 Gathers all shmem related call instructions into cibookeep.
+
+	 Input: Basic Block BB 
+	 Output: Prints call metainfo and it's corresponding base alloca instructions.
+	*/
+
 		virtual bool ProcessBasicBlock(BasicBlock &BB) {
 
 			for (BasicBlock::iterator bbs = BB.begin(), bbe = BB.end(); bbs != bbe; ++bbs) {
 
+				// typecasting iterator into instruction pointer.
 				Instruction* ii = &(*bbs);
+				// Create a callSite object from the ii. 
+				// This helps us to make use of callsite api to get name effectively.
+				// TODO : Possible alternative implemtation:    CallInst *ci = dyn_cast<CallInst>(ii);
 				CallSite cs(ii);
+				// Check if ii is a call instruction.
 				if (!cs.getInstruction()) continue;
+				// Gets rid of any complex pointer castings to this instruction.
 				Value* called = cs.getCalledValue()->stripPointerCasts();
+
 				if (Function *fptr = dyn_cast<Function>(called)) {
 					string cname = fptr->getName().str();
 
@@ -416,6 +465,7 @@ using namespace std;
 						errs() << *ii;
 						break;
 					}
+							/* Handles shmem_get and shmem_put instructions. Left the case 2 without a break intentionally*/
 					case 2:
 					case 3: {
 						CallInst *ci = dyn_cast<CallInst>(ii);
@@ -424,7 +474,7 @@ using namespace std;
 						errs() << "\t\t\t No of arguments: " << fptr->arg_size() << "\n";
 						errs() << "\t this gets arguments properly: " << ci->getNumArgOperands() << "\n";
 						CallMetaInfo *cmi = new CallMetaInfo(ci);
-						PrintFunctionArgs(ci, cmi);
+						PrintFunctionArgsCallMetaInfo(ci, cmi);
 						callinstvec.push_back(cmi);
 						Callinst2AllocaMap[ci] = cmi;
 						break;
@@ -1048,7 +1098,7 @@ for (unsigned num = 0; num < I->getNumOperands(); ++num)
 			//errs() << "\t\t "<< cast<CallInst>(ii).getCalledFunction().getName()<< "\n";
 			errs() << "\t\t "<< dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts()).getName()<< "\n";
 			errs() << "\t\t"<<ParseFunctionName(ci) << "\n";
-			PrintFunctionArgs(ci);
+			PrintFunctionArgsCallMetaInfo(ci);
 			errs() << bbs->getOpcodeName() << '\t';
 			bbs->printAsOperand(errs(), false);
 			errs() << '\n';
@@ -1064,7 +1114,7 @@ for (unsigned num = 0; num < I->getNumOperands(); ++num)
 			//errs() << "\t\t "<< cast<CallInst>(ii).getCalledFunction().getName()<< "\n";
 			//errs() << "\t\t BokkaBokka" << dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts())->getName().str() << "\n";
 			//errs() << "\t\t" << ParseFunctionName(ci) << "\n";
-			//PrintFunctionArgs(ci);
+			//PrintFunctionArgsCallMetaInfo(ci);
 			string cname = dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts())->getName().str();
 			if (cname.find("sh_") != std::string::npos) {
 
