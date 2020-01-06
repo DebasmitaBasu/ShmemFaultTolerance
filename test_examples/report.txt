@@ -1,0 +1,50 @@
+main 	 function size 13shmem_init  %19 = call i32 (...) @shmem_init()Function call: shmem_n_pes
+Function call: shmem_my_pe
+Function call: shmem_malloc
+Function call: shmem_int_get
+  %40 = load i32*, i32** %5, align 8
+
+  %43 = getelementptr inbounds [12 x i32], [12 x i32]* @src, i64 0, i64 %42
+
+i32 1
+i32 1
+i32
+const integer type
+Const value: 1
+
+Printing the actual PE argument: i32 1
+************************************************************************ 
+
+Function call: shmem_int_put
+  %47 = getelementptr inbounds [12 x i32], [12 x i32]* @src, i64 0, i64 %46
+
+  %52 = getelementptr inbounds [12 x i32], [12 x i32]* @src, i64 0, i64 %51
+
+i32 1
+i32 1
+i32
+const integer type
+Const value: 1
+
+Printing the actual PE argument: i32 1
+************************************************************************ 
+
+Function call: shmem_int_put
+  %58 = getelementptr inbounds [12 x i32], [12 x i32]* @src, i64 0, i64 %57
+
+  %59 = load i32*, i32** %5, align 8
+
+i32 1
+i32 1
+i32
+const integer type
+Const value: 1
+
+Printing the actual PE argument: i32 1
+************************************************************************ 
+
+Function call: shmem_barrier_all
+Function call: shmem_finalize
+
+	 Call instructions:	0
+

@@ -1,0 +1,285 @@
+main
+
+************************************************************************ 
+
+
+Function Name: main
+	Function size 1
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 0, i32* %1, align 4
+	 alloca name:
+No Debug Info!
+
+Pointer type allocation: 1
+ Array type allocation: 01 	  %21 = load i64*, i64** %2, align 8
+2 	  %15 = load i64*, i64** %2, align 8
+3 	  store i64* %12, i64** %2, align 8
+	 alloca name:
+No Debug Info!
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %25 = load i64, i64* %3, align 8
+2 	  %23 = call i32 (i64*, i64*, i32, i32, ...) bitcast (i32 (...)* @shmem_long_get to i32 (i64*, i64*, i32, i32, ...)*)(i64* %3, i64* %21, i32 1, i32 %22)
+|||||||||||Looping out|||||||||||||||||||	 alloca name:
+No Debug Info!
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %22 = load i32, i32* %4, align 4
+2 	  store i32 %19, i32* %4, align 4
+	 alloca name:
+No Debug Info!
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %24 = load i32, i32* %5, align 4
+2 	  %16 = load i32, i32* %5, align 4
+3 	  %13 = load i32, i32* %5, align 4
+4 	  store i32 %8, i32* %5, align 4
+	 alloca name:
+No Debug Info!
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %18 = load i32, i32* %6, align 4
+2 	  store i32 %9, i32* %6, align 4
+	 alloca name:
+No Debug Info!
+
+
+************************************************************************ 
+
+Run the alloca identification in every call instruction 
+shmem_init  %7 = call i32 (...) @shmem_init()Default case invoked: shmem_my_pe
+Default case invoked: shmem_n_pes
+Default case invoked: shmem_malloc
+
+
+
+Found  fxn call:   %23 = call i32 (i64*, i64*, i32, i32, ...) bitcast (i32 (...)* @shmem_long_get to i32 (i64*, i64*, i32, i32, ...)*)(i64* %3, i64* %21, i32 1, i32 %22)
+Function call: shmem_long_get
+			 No of arguments: 0
+	 this gets arguments properly: 4
+Iterating over the operands on the call instruction
+
+				 "  starting on : i32 1
+
+				 "  starting on :   %2 = alloca i64*, align 8
+
+"  processing   %2 = alloca i64*, align 8
+	" -> "  %2 = alloca i64*, align 8";
+
+				 "  starting on : i32 1
+0 'th alloca map:   %2 = alloca i64*, align 8
+
+				 "  starting on :   %4 = alloca i32, align 4
+
+"  processing   %4 = alloca i32, align 4
+	" -> "  %4 = alloca i32, align 4";
+
+				 "  starting on : i32 1
+0 'th alloca map:   %4 = alloca i32, align 4
+Alloca instructions ended
+
+
+function args trace start
+function args trace end
+
+Print argument type: i64*
+  %3 = alloca i64, align 8
+Alloca type
+
+Calculated flag: 0
+Calculated flag: 0
+Calculated flag: 0
+Calculated flag: 0
+Calculated flag: 0Print argument type: i64*
+  %21 = load i64*, i64** %2, align 8
+Load type
+Found alloca mapped instruction
+Default case invoked: printf
+
+
+************************************************************************ 
+
+Running the Block Frequency Estimation Part 
+**********************************
+prof count: 0	 freq count: 0 This block  : 	 has	 34 Instructions.
+ Found 7 shmem related call instructions
+ Found 8 load instructions
+ Found 6 store instructions
+ Display Call statistics: 
+		Printing function name: shmem_init occurs 0 times.
+		Printing function name: shmem_barrier_all occurs 0 times.
+		Printing function name: shmem_long_get occurs 0 times.
+		
+		
+Not a const
+		Printing the actual PE argument:   %22 = load i32, i32* %4, align 4
+		************************************************************************ 
+
+  %2 = alloca i64*, align 8  %4 = alloca i32, align 4		Printing function name: shmem_finalize occurs 0 times.
+ I am erroring out
+ block is inside loop
+
+LivenessAnalysis1	 ->   %1 = alloca i32, align 4
+2	 ->   %2 = alloca i64*, align 8
+3	 ->   %3 = alloca i64, align 8
+4	 ->   %4 = alloca i32, align 4
+5	 ->   %5 = alloca i32, align 4
+6	 ->   %6 = alloca i32, align 4
+7	 ->   store i32 0, i32* %1, align 4
+8	 ->   %7 = call i32 (...) @shmem_init()
+9	 ->   %8 = call i32 (...) @shmem_my_pe()
+10	 ->   store i32 %8, i32* %5, align 4
+11	 ->   %9 = call i32 (...) @shmem_n_pes()
+12	 ->   store i32 %9, i32* %6, align 4
+13	 ->   %10 = call i32 (i64, ...) bitcast (i32 (...)* @shmem_malloc to i32 (i64, ...)*)(i64 8)
+14	 ->   %11 = sext i32 %10 to i64
+15	 ->   %12 = inttoptr i64 %11 to i64*
+16	 ->   store i64* %12, i64** %2, align 8
+17	 ->   %13 = load i32, i32* %5, align 4
+18	 ->   %14 = sext i32 %13 to i64
+19	 ->   %15 = load i64*, i64** %2, align 8
+20	 ->   store i64 %14, i64* %15, align 8
+21	 ->   %16 = load i32, i32* %5, align 4
+22	 ->   %17 = add nsw i32 %16, 1
+23	 ->   %18 = load i32, i32* %6, align 4
+24	 ->   %19 = srem i32 %17, %18
+25	 ->   store i32 %19, i32* %4, align 4
+26	 ->   %20 = call i32 (...) @shmem_barrier_all()
+27	 ->   %21 = load i64*, i64** %2, align 8
+28	 ->   %22 = load i32, i32* %4, align 4
+29	 ->   %23 = call i32 (i64*, i64*, i32, i32, ...) bitcast (i32 (...)* @shmem_long_get to i32 (i64*, i64*, i32, i32, ...)*)(i64* %3, i64* %21, i32 1, i32 %22)
+30	 ->   %24 = load i32, i32* %5, align 4
+31	 ->   %25 = load i64, i64* %3, align 8
+32	 ->   %26 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str, i32 0, i32 0), i32 %24, i64 %25)
+33	 ->   %27 = call i32 (...) @shmem_finalize()
+34	 ->   ret i32 0
+Edge 0->Edge 34:
+Edge 2->Edge 1:1|9|11|13|14|15|18|
+Edge 3->Edge 2:1|2|9|11|13|14|15|18|
+Edge 4->Edge 3:1|2|3|9|11|13|14|15|18|
+Edge 5->Edge 4:1|2|3|4|9|11|13|14|15|18|
+Edge 6->Edge 5:1|2|3|4|5|9|11|13|14|15|18|
+Edge 7->Edge 6:1|2|3|4|5|6|9|11|13|14|15|18|
+Edge 8->Edge 7:2|3|4|5|6|9|11|13|14|15|18|
+Edge 9->Edge 8:2|3|4|5|6|9|11|13|14|15|18|
+Edge 10->Edge 9:2|3|4|5|6|9|11|13|14|15|18|
+Edge 11->Edge 10:2|3|4|5|6|11|13|14|15|18|
+Edge 12->Edge 11:2|3|4|5|6|11|13|14|15|18|
+Edge 13->Edge 12:2|3|4|5|6|13|14|15|18|
+Edge 14->Edge 13:2|3|4|5|6|13|14|15|18|
+Edge 15->Edge 14:2|3|4|5|6|14|15|18|
+Edge 16->Edge 15:2|3|4|5|6|15|18|
+Edge 17->Edge 16:2|3|4|5|6|18|
+Edge 18->Edge 17:2|3|4|5|6|17|18|
+Edge 19->Edge 18:2|3|4|5|6|18|
+Edge 20->Edge 19:2|3|4|5|6|18|19|
+Edge 21->Edge 20:2|3|4|5|6|
+Edge 22->Edge 21:2|3|4|5|6|21|
+Edge 23->Edge 22:2|3|4|5|6|22|
+Edge 24->Edge 23:2|3|4|5|22|23|
+Edge 25->Edge 24:2|3|4|5|24|
+Edge 26->Edge 25:2|3|4|5|
+Edge 27->Edge 26:2|3|4|5|
+Edge 28->Edge 27:3|4|5|27|
+Edge 29->Edge 28:3|5|27|28|
+Edge 30->Edge 29:3|5|
+Edge 31->Edge 30:3|30|
+Edge 32->Edge 31:30|31|
+Edge 33->Edge 32:
+Edge 34->Edge 33:
+terminator instruction:   ret i32 0
+
+LivenessAnalysis for every block Edge 34->Edge 33:
+reaching instructions from this block :
+  %1 = alloca i32, align 4
+  %2 = alloca i64*, align 8
+  %3 = alloca i64, align 8
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  %6 = alloca i32, align 4
+  store i32 0, i32* %1, align 4
+  %7 = call i32 (...) @shmem_init()
+  %8 = call i32 (...) @shmem_my_pe()
+  store i32 %8, i32* %5, align 4
+  %9 = call i32 (...) @shmem_n_pes()
+  store i32 %9, i32* %6, align 4
+  %10 = call i32 (i64, ...) bitcast (i32 (...)* @shmem_malloc to i32 (i64, ...)*)(i64 8)
+  %11 = sext i32 %10 to i64
+  %12 = inttoptr i64 %11 to i64*
+  store i64* %12, i64** %2, align 8
+  %13 = load i32, i32* %5, align 4
+  %14 = sext i32 %13 to i64
+  %15 = load i64*, i64** %2, align 8
+  store i64 %14, i64* %15, align 8
+  %16 = load i32, i32* %5, align 4
+  %17 = add nsw i32 %16, 1
+  %18 = load i32, i32* %6, align 4
+  %19 = srem i32 %17, %18
+  store i32 %19, i32* %4, align 4
+  %20 = call i32 (...) @shmem_barrier_all()
+  %21 = load i64*, i64** %2, align 8
+  %22 = load i32, i32* %4, align 4
+  %23 = call i32 (i64*, i64*, i32, i32, ...) bitcast (i32 (...)* @shmem_long_get to i32 (i64*, i64*, i32, i32, ...)*)(i64* %3, i64* %21, i32 1, i32 %22)
+  %24 = load i32, i32* %5, align 4
+  %25 = load i64, i64* %3, align 8
+  %26 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str, i32 0, i32 0), i32 %24, i64 %25)
+  %27 = call i32 (...) @shmem_finalize()
+  ret i32 0
+
+
+
+
+
+Printing the instruction index mapping
+  %1 = alloca i32, align 4
+  %2 = alloca i64*, align 8
+  %3 = alloca i64, align 8
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  %6 = alloca i32, align 4
+  store i32 0, i32* %1, align 4
+  %7 = call i32 (...) @shmem_init()
+  %8 = call i32 (...) @shmem_my_pe()
+  store i32 %8, i32* %5, align 4
+  %9 = call i32 (...) @shmem_n_pes()
+  store i32 %9, i32* %6, align 4
+  %10 = call i32 (i64, ...) bitcast (i32 (...)* @shmem_malloc to i32 (i64, ...)*)(i64 8)
+  %11 = sext i32 %10 to i64
+  %12 = inttoptr i64 %11 to i64*
+  store i64* %12, i64** %2, align 8
+  %13 = load i32, i32* %5, align 4
+  %14 = sext i32 %13 to i64
+  %15 = load i64*, i64** %2, align 8
+  store i64 %14, i64* %15, align 8
+  %16 = load i32, i32* %5, align 4
+  %17 = add nsw i32 %16, 1
+  %18 = load i32, i32* %6, align 4
+  %19 = srem i32 %17, %18
+  store i32 %19, i32* %4, align 4
+  %20 = call i32 (...) @shmem_barrier_all()
+  %21 = load i64*, i64** %2, align 8
+  %22 = load i32, i32* %4, align 4
+  %23 = call i32 (i64*, i64*, i32, i32, ...) bitcast (i32 (...)* @shmem_long_get to i32 (i64*, i64*, i32, i32, ...)*)(i64* %3, i64* %21, i32 1, i32 %22)
+  %24 = load i32, i32* %5, align 4
+  %25 = load i64, i64* %3, align 8
+  %26 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str, i32 0, i32 0), i32 %24, i64 %25)
+  %27 = call i32 (...) @shmem_finalize()
+  ret i32 0
+
+printing terminal instructions
+termivator instruction:   ret i32 0
+
+
+ID: 1
+freqcount: 0
+profcount: 0
+No of call instructions 7
+
+ Loop tagged info:2
+
+ Reacihng instruction information: 
+
+ No of lib load instructions: 0
+
+ No of lib store instructions: 1
+

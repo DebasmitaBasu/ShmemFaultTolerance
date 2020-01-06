@@ -133,3 +133,5 @@ To build the pass, do the following:
      opt.exe -fnargcnt < sum.bc > sum-out.bc
      ```
 
+
+# Helper commands

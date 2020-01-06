@@ -1,0 +1,68 @@
+main 	 Old function size 5 	 Process basic block 
+ 	 Processing  	 Process basic block 
+ 	 Processing  	 Process basic block 
+ 	 Processing  	 Process basic block 
+ 	 Processing  	 Process basic block 
+ 	 Processing  	 Split helper
+ 	 Split helper
+ 	 Split helper
+ 	 Split helper
+ 	 New function size 9 	 Printing the new IR after modification 	 Process basic block :
+  %1 = alloca i32, align 4
+  %2 = alloca i32, align 4
+  %3 = alloca i32, align 4
+  %4 = alloca double, align 8
+  store i32 0, i32* %1, align 4
+  br label %.split
+
+ 	 Process basic block :.split
+  %5 = call i32 (...) @shmem_init()
+  store double 0.000000e+00, double* %4, align 8
+  br label %.split.split
+
+ 	 Process basic block :.split.split
+  %6 = call i32 (...) @shmem_barrier_all()
+  store i32 0, i32* %2, align 4
+  br label %7
+
+ 	 Process basic block :
+  %8 = load i32, i32* %2, align 4
+  %9 = icmp slt i32 %8, 3
+  br i1 %9, label %10, label %23
+
+ 	 Process basic block :
+  %11 = load i32, i32* %2, align 4
+  %12 = sitofp i32 %11 to double
+  %13 = load double, double* %4, align 8
+  %14 = fadd double %13, %12
+  store double %14, double* %4, align 8
+  br label %.split1
+
+ 	 Process basic block :.split1
+  %15 = call i32 (...) @shmem_barrier_all()
+  %16 = load i32, i32* %2, align 4
+  %17 = sitofp i32 %16 to double
+  %18 = load double, double* %4, align 8
+  %19 = fadd double %18, %17
+  store double %19, double* %4, align 8
+  br label %20
+
+ 	 Process basic block :
+  %21 = load i32, i32* %2, align 4
+  %22 = add nsw i32 %21, 1
+  store i32 %22, i32* %2, align 4
+  br label %7
+
+ 	 Process basic block :
+  %24 = load i32, i32* %2, align 4
+  %25 = sitofp i32 %24 to double
+  %26 = load double, double* %4, align 8
+  %27 = fadd double %26, %25
+  store double %27, double* %4, align 8
+  br label %.split2
+
+ 	 Process basic block :.split2
+  %28 = call i32 (...) @shmem_finalize()
+  ret i32 0
+
+

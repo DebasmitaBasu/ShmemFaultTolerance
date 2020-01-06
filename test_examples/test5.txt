@@ -1,0 +1,121 @@
+main
+
+************************************************************************ 
+
+
+Function Name: main
+	Function size 1
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 0, i32* %1, align 4
+
+Pointer type allocation: 1
+ Array type allocation: 01 	  %25 = load i64*, i64** %2, align 8
+2 	  %22 = load i64*, i64** %2, align 8
+3 	  %16 = load i64*, i64** %2, align 8
+4 	  store i64* %13, i64** %2, align 8
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %29 = load i64, i64* %3, align 8
+2 	  %27 = call i32 (i64*, i64*, i32, i32, ...) bitcast (i32 (...)* @shmem_long_get to i32 (i64*, i64*, i32, i32, ...)*)(i64* %3, i64* %25, i32 1, i32 %26)
+3 	  %24 = call i32 (i64*, i64*, i32, i32, ...) bitcast (i32 (...)* @shmem_long_get to i32 (i64*, i64*, i32, i32, ...)*)(i64* %3, i64* %22, i32 1, i32 %23)
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %26 = load i32, i32* %4, align 4
+2 	  %23 = load i32, i32* %4, align 4
+3 	  store i32 %20, i32* %4, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %28 = load i32, i32* %5, align 4
+2 	  %17 = load i32, i32* %5, align 4
+3 	  %14 = load i32, i32* %5, align 4
+4 	  store i32 %9, i32* %5, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %19 = load i32, i32* %6, align 4
+2 	  store i32 %10, i32* %6, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 0, i32* %7, align 4
+
+
+************************************************************************ 
+
+Run the alloca identification in every call instruction 
+shmem_init  %8 = call i32 (...) @shmem_init()Function call: shmem_long_get
+Iterating over the operands on the call instruction
+  %2 = alloca i64*, align 8
+  %4 = alloca i32, align 4
+Alloca instructions ended
+
+
+function args trace start
+function args trace end
+
+Print argument type: i64*
+  %3 = alloca i64, align 8
+Alloca type
+
+Calculated flag: 0
+Calculated flag: 0
+Calculated flag: 1Found alloca direct instruction
+Print argument type: i64*
+  %22 = load i64*, i64** %2, align 8
+Load type
+Found alloca mapped instruction
+Function call: shmem_long_get
+Iterating over the operands on the call instruction
+  %2 = alloca i64*, align 8
+  %4 = alloca i32, align 4
+Alloca instructions ended
+
+
+function args trace start
+function args trace end
+
+Print argument type: i64*
+  %3 = alloca i64, align 8
+Alloca type
+
+Calculated flag: 0
+Calculated flag: 0
+Calculated flag: 1Found alloca direct instruction
+Print argument type: i64*
+  %25 = load i64*, i64** %2, align 8
+Load type
+Found alloca mapped instruction
+
+
+************************************************************************ 
+
+Running the Block Frequency Estimation Part 
+&&&&&&&&&&&&&&&&&&&&&&
+block-frequency-info: main
+ - : float = 1.0, int = 8
+
+%%%%%%%%%%%%%%%%%%%%%
+---- Branch Probabilities ----
+**********************************
+prof count: 0	 freq count: 8 This block  : 	 has	 39 Instructions.
+ Found 8 shmem related call instructions
+ Display Call statistics: 
+		Printing function name: shmem_long_get occurs 8 times.
+		
+		
+Not a const
+		Printing the actual PE argument:   %23 = load i32, i32* %4, align 4
+		************************************************************************ 
+
+		Printing function name: shmem_long_get occurs 8 times.
+		
+		
+Not a const
+		Printing the actual PE argument:   %26 = load i32, i32* %4, align 4
+		************************************************************************ 
+
+Not an affine loop. Not of some interest
+
+
+ID: 1
+freqcount: 8
+profcount: 0
+No of call instructions 8

@@ -1,0 +1,11 @@
+clang input.bc -fprofile-generate 
+-o output
+
+The binary runs with selected inputs and the profiles are merged: 
+llvm-profdata merge input.profraw -output=output.prof
+
+Then opt runs with arguments: opt input.bc -o output.bc -load mypass.so 
+-block-freq -pgo-instr-use -pgo-test-profile-file=output.prof 
+-profile-sample-accurate -mypass
+
+

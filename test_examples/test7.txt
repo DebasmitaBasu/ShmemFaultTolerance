@@ -1,0 +1,29 @@
+up
+
+************************************************************************ 
+
+
+Function Name: up
+	Function size 1
+Pointer type allocation: 0
+ Array type allocation: 01 	  %7 = load i32, i32* %1, align 4
+2 	  store i32 %5, i32* %1, align 4
+3 	  %4 = load i32, i32* %1, align 4
+4 	  store i32 0, i32* %1, align 4
+
+
+************************************************************************ 
+
+Run the alloca identification in every call instruction 
+
+
+************************************************************************ 
+
+Running the Block Frequency Estimation Part 
+&&&&&&&&&&&&&&&&&&&&&&
+block-frequency-info: up
+ - : float = 1.0, int = 8
+
+%%%%%%%%%%%%%%%%%%%%%
+---- Branch Probabilities ----
+

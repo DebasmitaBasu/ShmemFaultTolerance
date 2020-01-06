@@ -1,0 +1,101 @@
+main
+
+************************************************************************ 
+
+
+Function Name: main
+LivenessAnalysis1	 ->   %1 = alloca i32, align 4
+2	 ->   %2 = alloca i32, align 4
+3	 ->   %3 = alloca i32, align 4
+4	 ->   %4 = alloca i32, align 4
+5	 ->   %5 = alloca i32*, align 8
+6	 ->   %6 = alloca i32, align 4
+7	 ->   store i32 0, i32* %1, align 4
+8	 ->   store i32 6, i32* %6, align 4
+9	 ->   store i32 0, i32* %4, align 4
+10	 ->   br label %7
+11	 ->   %8 = load i32, i32* %4, align 4
+12	 ->   %9 = icmp slt i32 %8, 12
+13	 ->   br i1 %9, label %10, label %18
+14	 ->   %11 = load i32, i32* %4, align 4
+15	 ->   %12 = load i32, i32* %4, align 4
+16	 ->   %13 = sext i32 %12 to i64
+17	 ->   %14 = getelementptr inbounds [12 x i32], [12 x i32]* @src, i64 0, i64 %13
+18	 ->   store i32 %11, i32* %14, align 4
+19	 ->   br label %15
+20	 ->   %16 = load i32, i32* %4, align 4
+21	 ->   %17 = add nsw i32 %16, 1
+22	 ->   store i32 %17, i32* %4, align 4
+23	 ->   br label %7
+24	 ->   store i32 123456, i32* getelementptr inbounds ([12 x i32], [12 x i32]* @src, i64 0, i64 9), align 4
+25	 ->   %19 = call i32 (...) @shmem_finalize()
+26	 ->   ret i32 0
+Edge 0->Edge 26:
+Edge 2->Edge 1:1|16|
+Edge 3->Edge 2:1|16|
+Edge 4->Edge 3:1|16|
+Edge 5->Edge 4:1|4|16|
+Edge 6->Edge 5:1|4|16|
+Edge 7->Edge 6:1|4|6|16|
+Edge 8->Edge 7:4|6|16|
+Edge 9->Edge 8:4|16|
+Edge 10->Edge 9:4|16|
+Edge 11->Edge 10:4|16|
+Edge 11->Edge 23:4|16|
+Edge 12->Edge 11:4|11|16|
+Edge 13->Edge 12:4|12|16|
+Edge 14->Edge 13:4|16|
+Edge 15->Edge 14:4|14|16|
+Edge 16->Edge 15:4|14|15|16|
+Edge 17->Edge 16:4|14|16|
+Edge 18->Edge 17:4|14|16|17|
+Edge 19->Edge 18:4|16|
+Edge 20->Edge 19:4|16|
+Edge 21->Edge 20:4|16|20|
+Edge 22->Edge 21:4|16|21|
+Edge 23->Edge 22:4|16|
+Edge 24->Edge 13:
+Edge 25->Edge 24:
+Edge 26->Edge 25:
+
+	Function size 5
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 0, i32* %1, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 0
+Pointer type allocation: 0
+ Array type allocation: 0
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 %17, i32* %4, align 4
+2 	  %16 = load i32, i32* %4, align 4
+3 	  %12 = load i32, i32* %4, align 4
+4 	  %11 = load i32, i32* %4, align 4
+5 	  %8 = load i32, i32* %4, align 4
+6 	  store i32 0, i32* %4, align 4
+
+Pointer type allocation: 1
+ Array type allocation: 0
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 6, i32* %6, align 4
+
+
+************************************************************************ 
+
+Run the alloca identification in every call instruction 
+
+
+************************************************************************ 
+
+Running the Block Frequency Estimation Part 
+**********************************
+prof count: 0	 freq count: 0 This block  : 	 has	 3 Instructions.
+ Found 1 shmem related call instructions
+ Display Call statistics: 
+		Printing function name: shmem_finalize occurs 0 times.
+
+
+ID: 1
+freqcount: 0
+profcount: 0
+No of call instructions 1

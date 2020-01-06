@@ -1,0 +1,139 @@
+main
+
+************************************************************************ 
+
+
+Function Name: main
+	Function size 5
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 0, i32* %1, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  store i32 %22, i32* %2, align 4
+2 	  %21 = load i32, i32* %2, align 4
+3 	  %17 = load i32, i32* %2, align 4
+4 	  %12 = load i32, i32* %2, align 4
+5 	  store i32 0, i32* %2, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %38 = load i32, i32* %3, align 4
+2 	  %33 = load i32, i32* %3, align 4
+3 	  store i32 %30, i32* %3, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %27 = load i32, i32* %4, align 4
+2 	  %15 = load i32, i32* %4, align 4
+3 	  store i32 %9, i32* %4, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 01 	  %29 = load i32, i32* %5, align 4
+2 	  store i32 %10, i32* %5, align 4
+
+Pointer type allocation: 0
+ Array type allocation: 1Allocated type[9 x i64] 
+
+Alloca instruction is an array inst of size : i32 1 sz  91 	  %36 = getelementptr inbounds [9 x i64], [9 x i64]* %6, i32 0, i32 0
+*******************GEPI found
+2 	  %32 = getelementptr inbounds [9 x i64], [9 x i64]* %6, i32 0, i32 0
+*******************GEPI found
+3 	  %19 = getelementptr inbounds [9 x i64], [9 x i64]* %6, i64 0, i64 %18
+*******************GEPI found
+
+Pointer type allocation: 1
+ Array type allocation: 01 	  %41 = load i64*, i64** %7, align 8
+2 	  %35 = load i64*, i64** %7, align 8
+3 	  %31 = load i64*, i64** %7, align 8
+4 	  store i64* %26, i64** %7, align 8
+
+
+************************************************************************ 
+
+Run the alloca identification in every call instruction 
+shmem_init  %8 = call i32 (...) @shmem_init()Function call: shmem_long_put
+Iterating over the operands on the call instruction
+  %7 = alloca i64*, align 8
+  %6 = alloca [9 x i64], align 16
+  %3 = alloca i32, align 4
+Alloca instructions ended
+
+
+function args trace start
+function args trace end
+
+Print argument type: i64*
+  %31 = load i64*, i64** %7, align 8
+Load type
+Found alloca mapped instruction
+Print argument type: i64*
+  %32 = getelementptr inbounds [9 x i64], [9 x i64]* %6, i32 0, i32 0
+Found GEPI instruction
+3
+	  %6 = alloca [9 x i64], align 16
+	i32 0
+	i32 0
+Function call: shmem_long_put
+Iterating over the operands on the call instruction
+  %7 = alloca i64*, align 8
+  %6 = alloca [9 x i64], align 16
+  %3 = alloca i32, align 4
+Alloca instructions ended
+
+
+function args trace start
+function args trace end
+
+Print argument type: i64*
+  %35 = load i64*, i64** %7, align 8
+Load type
+Found alloca mapped instruction
+Print argument type: i64*
+  %37 = getelementptr inbounds i64, i64* %36, i64 3
+Found GEPI instruction
+2
+	  %36 = getelementptr inbounds [9 x i64], [9 x i64]* %6, i32 0, i32 0
+	i64 3
+
+
+************************************************************************ 
+
+Running the Block Frequency Estimation Part 
+&&&&&&&&&&&&&&&&&&&&&&
+block-frequency-info: main
+ - : float = 1.0, int = 8
+ - : float = 32.0, int = 256
+ - : float = 31.0, int = 248
+ - : float = 31.0, int = 248
+ - : float = 1.0, int = 8
+
+%%%%%%%%%%%%%%%%%%%%%
+---- Branch Probabilities ----
+  edge  ->  probability is 0x80000000 / 0x80000000 = 100.00% [HOT edge]
+  edge  ->  probability is 0x7c000000 / 0x80000000 = 96.88% [HOT edge]
+  edge  ->  probability is 0x04000000 / 0x80000000 = 3.12%
+  edge  ->  probability is 0x80000000 / 0x80000000 = 100.00% [HOT edge]
+  edge  ->  probability is 0x80000000 / 0x80000000 = 100.00% [HOT edge]
+**********************************
+prof count: 0	 freq count: 8 This block  : 	 has	 23 Instructions.
+ Found 9 shmem related call instructions
+ Display Call statistics: 
+		Printing function name: shmem_long_put occurs 8 times.
+		
+		
+Not a const
+		Printing the actual PE argument:   %33 = load i32, i32* %3, align 4
+		************************************************************************ 
+
+		Printing function name: shmem_long_put occurs 8 times.
+		
+		
+Not a const
+		Printing the actual PE argument:   %38 = load i32, i32* %3, align 4
+		************************************************************************ 
+
+Not an affine loop. Not of some interest
+
+
+ID: 1
+freqcount: 8
+profcount: 0
+No of call instructions 9
