@@ -33,6 +33,7 @@ This information plays a key role in identifying places to insert check pointing
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/CallSite.h"
 #include "llvm/IR/InstrTypes.h"
+#include "llvm/InitializePasses.h" /*deb*/
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Function.h"
@@ -821,7 +822,9 @@ Output: name of the call function.
 					const llvm::DebugLoc &debugInfo = I->getDebugLoc();
 					if (debugInfo)
 					{
-						std::string filePath = debugInfo->getFilename();
+						//deb
+						//std::string filePath = debugInfo->getFilename();
+						llvm::StringRef filePath = debugInfo->getFilename();
 						int line = debugInfo->getLine();
 						int column = debugInfo->getColumn();
 						errs() << I << "::" << "File name = " << filePath << "Line no: " << line << ":" << column << "!\n";

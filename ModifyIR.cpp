@@ -8,6 +8,7 @@
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/CallSite.h"
 #include "llvm/IR/InstrTypes.h"
+#include "llvm/InitializePasses.h" /*deb*/
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Function.h"
@@ -138,7 +139,9 @@ namespace
 			std::string newFuncName = checkpointFuncName[funcVal];
 			
 			/* Inserts the function call checkpoint() with newFuncname and insertFucntype return type*/
-			Constant *newFunc = F.getParent()->getOrInsertFunction(newFuncName, insertFuncType);
+			//deb
+			//Constant *newFunc = F.getParent()->getOrInsertFunction(newFuncName, insertFuncType);
+			llvm::FunctionCallee newFunc = F.getParent()->getOrInsertFunction(newFuncName, insertFuncType);
 			errs() << " \t Try modifying the IR";
 			/* creates a call instruction with all prefilled entries*/
 			CallInst *NewCI = CallInst::Create(newFunc, Args);

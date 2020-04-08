@@ -1,5 +1,5 @@
 
-add_llvm_loadable_module( LLVMShmemFaultTolerance
+add_llvm_library( LLVMShmemFaultTolerance
   shmemheat.cpp
   BlockSplitter.cpp
   ModifyIR.cpp
