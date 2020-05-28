@@ -6,7 +6,8 @@
  * */
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
-#include "llvm/IR/CallSite.h"
+//deb-llvm10update
+//#include "llvm/IR/CallSite.h"
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
@@ -89,9 +90,11 @@ namespace
 			for (BasicBlock::iterator bbs = BB.begin(), bbe = BB.end(); bbs != bbe; ++bbs) {
 
 				Instruction* ii = &(*bbs);
-				CallSite cs(ii);
-				if (!cs.getInstruction()) continue;
-				Value* called = cs.getCalledValue()->stripPointerCasts();
+				//deb-llvm10update
+				//CallSite cs(ii);
+				CallInst *cs = dyn_cast<CallInst>(ii);
+				//****if (!cs.getInstruction()) continue;
+				Value* called = cs->getCalledFunction();
 				if (Function *fptr = dyn_cast<Function>(called)) {
 					string cname = fptr->getName().str();
 					switch (GetFunctionID(cname)) {
@@ -138,7 +141,9 @@ namespace
 			std::string newFuncName = checkpointFuncName[funcVal];
 			
 			/* Inserts the function call checkpoint() with newFuncname and insertFucntype return type*/
-			Constant *newFunc = F.getParent()->getOrInsertFunction(newFuncName, insertFuncType);
+			//deb
+			//Constant *newFunc = F.getParent()->getOrInsertFunction(newFuncName, insertFuncType);
+			llvm::FunctionCallee newFunc = F.getParent()->getOrInsertFunction(newFuncName, insertFuncType);
 			errs() << " \t Try modifying the IR";
 			/* creates a call instruction with all prefilled entries*/
 			CallInst *NewCI = CallInst::Create(newFunc, Args);
@@ -195,6 +200,8 @@ namespace
 
 }
 
+//@Abdulllah
 char ModifyIR::ID = 0;
+void initializeModifyIRPass(PassRegistry &);
 INITIALIZE_PASS(ModifyIR, "ModifyIRPass",
 	"Changes the IR to add a custom function", false, false)

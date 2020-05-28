@@ -5,12 +5,17 @@
 
 using namespace llvm;
 
-void llvm::initializeShmemFaultTolerance(PassRegistry &Registry) {
-	/*initializeBlockSplitterPass(Registry);
-	initializeshmemheatPass(Registry);*/
+void llvm::initializeLLVMShmemFaultTolerance(PassRegistry &Registry) {
+	initializeBlockSplitterPass(Registry);
+	initializeModifyIRPass(Registry);
+	initializeshmemheatPass(Registry);
 
 }
+
+/*
 
 void LLVMInitializeShmemFaultTolerance(LLVMPassRegistryRef R) {
 	initializeShmemFaultTolerance(*unwrap(R));
 }
+
+*/

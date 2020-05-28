@@ -49,7 +49,8 @@ Input Basic Block:
 #pragma once
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
-#include "llvm/IR/CallSite.h"
+//deb-llvm10update
+//#include "llvm/IR/CallSite.h"
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
@@ -206,11 +207,19 @@ Newly created Basic Blocks:
 			// Create a callSite object from the ii. 
 			// This helps us to make use of callsite api to get name effectively.
 			// TODO : Possible alternative implemtation:    CallInst *ci = dyn_cast<CallInst>(ii);
-			CallSite cs(ii);
+			//deb-llvm10update
+			//CallSite cs(ii);
+			CallInst *cs = dyn_cast<CallInst>(ii);
+			
 			// Check if ii is a call instruction.
-			if (!cs.getInstruction()) continue;
+			//deb-llvm10update
+			//****if (!cs.getInstruction()) continue;
+			
+
 			// Gets rid of any complex pointer castings to this instruction.
-			Value* called = cs.getCalledValue()->stripPointerCasts();
+			//Value* called = cs.getCalledValue()->stripPointerCasts();
+			//deb-llvm10update
+			Value* called = cs->getCalledFunction();
 			// Gets the function pointer to the Called function in the call instruction.
 			if (Function *fptr = dyn_cast<Function>(called)) {
 				// get name of the function from the fptr
@@ -272,8 +281,14 @@ Newly created Basic Blocks:
 RegisterPass<BlockSplitter> X("BlockSplitter" , "Splits Blocks which have shmem functions");*/
 }
 
-// This needs to be done to add this pass to llvm namespace.
 char BlockSplitter::ID = 0;
+/*
+namespace llvm {
+	void initializeBlockSplitterPass(PassRegistry &);
+} //end llvm namespace */
+void initializeBlockSplitterPass(PassRegistry &);
+// This needs to be done to add this pass to llvm namespace.
+//CHAR BlockSplitter::ID = 0;
 INITIALIZE_PASS(BlockSplitter, "BlockSplitterPass",
 	"Splits the blocks appropriately", false, false)
 

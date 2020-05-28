@@ -2,7 +2,6 @@
  * CSE 523 / 524
  * SAMPATH KUMAR KILAPARTHI
  * 112079198
- *
  * */
 
 
@@ -11,6 +10,7 @@
  This pass is the core of this fault tolerance pipeline. It should act as a glue between  BlockSplitter and Modify IR. 
  This can be categorized as a meta info collection pass. Some of the key information pertaining to the placement of checkpointing calls
  is deduced here. This is organized into several parts.
+
 
  
  1. Collecting Alloca related meta info
@@ -31,7 +31,8 @@ This information plays a key role in identifying places to insert check pointing
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
-#include "llvm/IR/CallSite.h"
+//deb10-llvm10 update
+//#include "llvm/IR/CallSite.h"
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
@@ -99,12 +100,16 @@ Output: name of the call function.
 		map < CallInst *, CallMetaInfo* > Callinst2AllocaMap;
 		/* mapping between shmem function call and their ID's. This is done towards a generic way of inputting 
 		library calls to this pass as  a user input*/
+		//@deb, vector to hold allocainstructions
+		vector < Instruction *>  allocaV;
 
 		map <string, int> functionMap;
 		/* mapping between Basic Block and it's corrresponding heat node*/
 		map < bbt, heatNode *> heatmp;
 		/* mapping between Basic Block ID and it's corrresponding head node. Just in case. May come handy*/
 		map < int, heatNode *> heatIDmp;
+
+
 
 		//std::map<unsigned, BasicBlock::iterator> IndexToInstr;
 		//map< string, int> functionToCodeMap;
@@ -261,7 +266,9 @@ Output: name of the call function.
 		*/
 		void PrintFunctionArgsCallMetaInfo(CallInst *ci, CallMetaInfo *cmi) {
 			// gets function name from the call instruction
-			string cname = dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts())->getName().str();
+			//deb-llvm10update
+			//string cname = dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts())->getName().str();
+			string cname = ci->getCalledFunction()->getName().str();
 			// We check fucntions which contains get and put functions. We match the function string cname with selected patterns.
 			Value *v1, *v2, *v3, *v4;
 			LoadInst *li1, *li2;
@@ -484,20 +491,28 @@ Output: name of the call function.
 
 		virtual bool ProcessBasicBlock(BasicBlock &BB) {
 
-			for (BasicBlock::iterator bbs = BB.begin(), bbe = BB.end(); bbs != bbe; ++bbs) {
 
+			for (BasicBlock::iterator bbs = BB.begin(), bbe = BB.end(); bbs != bbe; ++bbs) {
+                
 				// typecasting iterator into instruction pointer.
 				Instruction* ii = &(*bbs);
 				// Create a callSite object from the ii. 
 				// This helps us to make use of callsite api to get name effectively.
 				// TODO : Possible alternative implemtation:    CallInst *ci = dyn_cast<CallInst>(ii);
-				CallSite cs(ii);
+				//deb-llvm10update
+				//****CallSite cs(ii);
+				CallInst *cs = dyn_cast<CallInst>(ii);
 				// Check if ii is a call instruction.
-				if (!cs.getInstruction()) continue;
+				//deb-llvm10update
+				//****if (!cs.getInstruction()) continue;
+				
+				if (cs == NULL) continue;
 				// Gets rid of any complex pointer castings to this instruction.
-				Value* called = cs.getCalledValue()->stripPointerCasts();
-
-				if (Function *fptr = dyn_cast<Function>(called)) {
+				
+				//deb-llvm10update
+				//****Value* called = cs->getCalledFunction();
+				//****if (Function *fptr = dyn_cast<Function>(called)) {
+				if (Function *fptr = cs->getCalledFunction()) {
 					string cname = fptr->getName().str();
 
 					// Add provision to look for different shmem functions
@@ -559,7 +574,9 @@ Output: name of the call function.
 		void DisplayCallstatistics(Instruction *ins, uint64_t &count) {
 			Instruction* ii = ins;
 			CallInst *ci = cast<CallInst>(ii);
-			string cname = dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts())->getName().str();
+			//deb-llvm10update
+			//string cname = dyn_cast<Function>(ci->getCalledValue()->stripPointerCasts())->getName().str();
+			string cname = ci->getCalledFunction()->getName().str();
 			errs() << "\t\tPrinting function name: " << cname << " occurs " << count << " times.\n";
 			// We check fucntions which contains get and put functions. We match the function string cname with selected patterns.
 
@@ -622,9 +639,12 @@ Output: name of the call function.
 		int getlibstoreinstructions(vector <Instruction *> &callinst) {
 			int libload = 0;
 			for (auto ii : callinst) {
-				CallSite cs(ii);
-				Value* called = cs.getCalledValue()->stripPointerCasts();
-				if (Function *fptr = dyn_cast<Function>(called)) {
+				//deb-llvm10update
+				//****CallSite cs(ii);
+				CallInst *cs = dyn_cast<CallInst>(ii);
+				//****Value* called = cs->getCalledFunction();
+				//****if (Function *fptr = dyn_cast<Function>(called)) {
+				if (Function *fptr = cs->getCalledFunction()) {
 					string cname = fptr->getName().str();
 					if (cname.find("get") != std::string::npos) libload++;
 				}
@@ -635,9 +655,12 @@ Output: name of the call function.
 		int getlibloadinstructions(vector <Instruction *> &callinst) {
 			int libload = 0;
 			for (auto ii : callinst) {
-				CallSite cs(ii);
-				Value* called = cs.getCalledValue()->stripPointerCasts();
-				if (Function *fptr = dyn_cast<Function>(called)) {
+				//deb-llvm10update
+				//****CallSite cs(ii);
+				CallInst *cs = dyn_cast<CallInst>(ii);
+				//****Value* called = cs->getCalledFunction();
+				//****if (Function *fptr = dyn_cast<Function>(called)) {
+				if (Function *fptr = cs->getCalledFunction()) {
 					string cname = fptr->getName().str();
 					if (cname.find("put") != std::string::npos) libload++;
 				}
@@ -660,11 +683,17 @@ Output: name of the call function.
 				Instruction* ii = &I;
 				if (isa<LoadInst>(ii)) loadcnt++;
 				else if (isa<StoreInst>(ii)) storecnt++;
-				CallSite cs(ii);
-				if (!cs.getInstruction()) continue;
+				//deb-llvm10update
+				//****CallSite cs(ii);
+				CallInst *cs = dyn_cast<CallInst>(ii);
+				
+				//deb-llvm10update
+				//****if (!cs.getInstruction()) continue;
+				if (cs == NULL) continue;
 
-				Value* called = cs.getCalledValue()->stripPointerCasts();
-				if (Function *fptr = dyn_cast<Function>(called)) {
+				//****Value* called = cs->getCalledFunction();
+				//****if (Function *fptr = dyn_cast<Function>(called)) {
+				if (Function *fptr = cs->getCalledFunction()) {
 					string cname = fptr->getName().str();
 					if (isShmemCall(cname)) {
 						callinst.push_back(ii);
@@ -722,7 +751,7 @@ Output: name of the call function.
 						return false;
 					}
 				} else {
-					errs() << "|||||||||||Looping out|||||||||||||||||||";
+					errs() << "\n|||||||||||Looping out|||||||||||||||||||";
 					//useinst->print(errs()); errs() << "\n";
 					return false;
 				}
@@ -745,57 +774,160 @@ Output: name of the call function.
 			}
 		}
 
+
+		// void processLLVMDbgDec(Function &Func){
+            
+  //           for (auto &Ins : Func.getEntryBlock()) {
+
+            
+  //               if (isa<CallInst>(Ins)) {
+
+     
+  //                   StringRef calledFN = cast<CallInst>(Ins).getCalledFunction()->getName();
+
+  //                   if(calledFN == "llvm.dbg.declare" ){
+                        
+  //                       Instruction *II = &Ins;
+  //                       CallInst *CI = dyn_cast<CallInst>(II);
+		// 				AllocaInst *AI;    /* AllocaInst is the result */
+                        
+		// 				Metadata *Meta = cast<MetadataAsValue>(CI->getOperand(1))->getMetadata();
+						
+		// 				if (isa<ValueAsMetadata>(Meta)) {
+		// 					Value *V = cast <ValueAsMetadata>(Meta)->getValue();
+		// 					AI = cast<AllocaInst>(V);
+
+		// 				}
+
+		// 				DIVariable *V = cast<DIVariable>(cast<MetadataAsValue>(CI->getOperand(1))->getMetadata());
+                        
+
+  //                       if(V!=NULL){
+  //                          errs()<<V->getName()<<"\n ";
+  //                          errs()<<V->getLine()<<"\n ";
+  //                          errs()<<V->getDirectory()<<"\n ";
+  //                          errs()<<V->getFilename()<<"\n ";
+  //                       }
+  //                   }
+
+  //               }
+
+		// 	}
+
+		// }
+
 		void processAllocaInstructions(Function &Func) {
 
 			for (auto &insref : Func.getEntryBlock()) {
 				Instruction *I = &insref;
 
+				if (isa<CallInst>(insref)) {
+
+                 //Handle LLVM Debug Declare fnction information for fetching source level details of variables
+				 //involved in alloca instructions.
+				 if(cast<CallInst>(insref).getCalledFunction()!=NULL){
+                    string calledFN = cast<CallInst>(insref).getCalledFunction()->getName().str();
+
+                    if(calledFN == "llvm.dbg.declare" ){
+                        
+                        Instruction *II = &insref;
+                        CallInst *CI = dyn_cast<CallInst>(II);
+						AllocaInst *AI;    /* AllocaInst is encoded in the first metadata argument */
+                        
+						Metadata *Meta = cast<MetadataAsValue>(CI->getOperand(0))->getMetadata();
+						
+						if (isa<ValueAsMetadata>(Meta)) {
+							Value *V = cast <ValueAsMetadata>(Meta)->getValue();
+							AI = cast<AllocaInst>(V);
+							//errs()<<"####result:"<<AI<<"\n";
+
+						}
+
+						DIVariable *V = cast<DIVariable>(cast<MetadataAsValue>(CI->getOperand(1))->getMetadata());
+                        
+
+                        if(V!=NULL){
+                           errs()<<"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ";
+                           errs()<<"Source var name:"<<V->getName()<<"\n ";
+                           errs()<<"Row in Source file:"<<V->getLine()<<"\n ";
+                           errs()<<"Path of Source file:"<<V->getDirectory()<<"\n ";
+                           errs()<<"Source file name:"<<V->getFilename()<<"\n ";
+                           
+                        }
+                     
+                     for (auto i = allocaV.begin(); i != allocaV.end(); ++i){
+                          
+				          AllocaInst *alloca = dyn_cast_or_null<AllocaInst>(*i);
+				          //errs()<<"Allocavector:"<<*i <<"alloca:"<<alloca<< "\n"; 
+				          //if the alloca in llv.dbg.declare call, is found in allocaV vector
+				          //Run and print the alloca identification in every call instruction
+				          if(AI == alloca) 
+				             PrintAllocaRelatedInstructions(alloca);
+
+                        } 
+
+                       } 
+                    }
+
+                }
+
 				// We check if the given instruction can be casted to a Alloca instruction.
 				if (AllocaInst *alloca = dyn_cast_or_null<AllocaInst>(&insref)) {
 					//errs() << " \n Identified a alloca instruction : " << (I)->getNumOperands();
+					//Store the alloca instuction in a vector.
+					allocaV.push_back(&insref);
 
-					/* This sets if the alloca instruction is of specific size or not.*/
-					bool is_interesting = (alloca->getAllocatedType()->isSized());
-					//errs() << " \n issized (): " << is_interesting << "\nisstaticalloca: " << alloca->isStaticAlloca();
-					//errs() << " is array allocation: " << alloca->isArrayAllocation();
-					//errs() << "\n getallocasizeinbytes(): " << getAllocaSizeInBytes(alloca);
-					bool isArray = alloca->isArrayAllocation() || alloca->getType()->getElementType()->isArrayTy();
+				}
 
-					errs() << "\nPointer type allocation: " << alloca->getAllocatedType()->isPointerTy();
-					errs() << "\n Array type allocation: " << alloca->getAllocatedType()->isArrayTy();
-					//if (isArray) errs() << " array[" << *(alloca->getArraySize()) << "]"  << *(alloca->getOperand(0)) <<"\n";
+				
+			}
+		}
 
-					VariableMetaInfo  *varinfo = new VariableMetaInfo(alloca);
+		// Run the alloca identification in every call instruction
+		void PrintAllocaRelatedInstructions(AllocaInst *alloca) {
 
-					/* tells if it is sized*/
-					if (alloca->isStaticAlloca()) {
-						varinfo->is_static_alloca = true;
-					}
-					/* Tells if the alloca is a pointer allocation*/
-					if (alloca->getAllocatedType()->isPointerTy()) {
-						varinfo->isPointer = true;
-					}
-					/* check if an allocation is array and retrieve it's size*/
-					if (isArray || alloca->getAllocatedType()->isArrayTy()) {
+				// 	/* This sets if the alloca instruction is of specific size or not.*/
+				bool is_interesting = (alloca->getAllocatedType()->isSized());
+				// 	//errs() << " \n issized (): " << is_interesting << "\nisstaticalloca: " << alloca->isStaticAlloca();
+				// 	//errs() << " is array allocation: " << alloca->isArrayAllocation();
+				// 	//errs() << "\n getallocasizeinbytes(): " << getAllocaSizeInBytes(alloca);
+				bool isArray = alloca->isArrayAllocation() || alloca->getType()->getElementType()->isArrayTy();
 
-						/*The AllocaInst instruction allocates stack memory.The value that it
-							returns is always a pointer to memory.
+				errs() << "Pointer type allocation: " << alloca->getAllocatedType()->isPointerTy()<<"\n";
+			    errs() << "Array type allocation: " << alloca->getAllocatedType()->isArrayTy()<<"\n";
+				// 	//if (isArray) errs() << " array[" << *(alloca->getArraySize()) << "]"  << *(alloca->getOperand(0)) <<"\n";
 
-							You should run an experiment to double - check this, but I believe
-							AllocaInst::getType() returns the type of the value that is the result
-							of the alloca while AllocaInst::getAllocatedType() returns the type of
-							the value that is allocated.For example, if the alloca allocates a
-							struct { int; int }, then getAllocatedType() returns a struct type and
-							getType() return a "pointer to struct" type.*/
+				VariableMetaInfo  *varinfo = new VariableMetaInfo(alloca);
 
-							//errs() << "size : " << cast<ArrayType>(alloca->getAllocatedType())->getNumElements() << "\n";
-						errs() << "Allocated type" << *(alloca->getAllocatedType()) << " \n";
+				// 	/* tells if it is sized*/
+				if (alloca->isStaticAlloca()) {
+					varinfo->is_static_alloca = true;
+				}
+				// 	/* Tells if the alloca is a pointer allocation*/
+				if (alloca->getAllocatedType()->isPointerTy()) {
+					varinfo->isPointer = true;
+				}
+				// 	/* check if an allocation is array and retrieve it's size*/
+				if (isArray || alloca->getAllocatedType()->isArrayTy()) {
 
-						Value* arraysize = alloca->getArraySize();
-						/*Value* totalsize = ConstantInt::get(arraysize->getType(), CurrentDL->getTypeAllocSize(II->getAllocatedType()));
-						totalsize = Builder->CreateMul(totalsize, arraysize);
-						totalsize = Builder->CreateIntCast(totalsize, MySizeType, false);
-						TheState.SetSizeForPointerVariable(II, totalsize);*/
+				// 		The AllocaInst instruction allocates stack memory.The value that it
+				// 			returns is always a pointer to memory.
+
+				// 			You should run an experiment to double - check this, but I believe
+				// 			AllocaInst::getType() returns the type of the value that is the result
+				// 			of the alloca while AllocaInst::getAllocatedType() returns the type of
+				// 			the value that is allocated.For example, if the alloca allocates a
+				// 			struct { int; int }, then getAllocatedType() returns a struct type and
+				// 			getType() return a "pointer to struct" type.
+
+				// 			//errs() << "size : " << cast<ArrayType>(alloca->getAllocatedType())->getNumElements() << "\n";
+				      errs() << "Allocated type" << *(alloca->getAllocatedType()) << " \n";
+
+				// 		Value* arraysize = alloca->getArraySize();
+				// 		/*Value* totalsize = ConstantInt::get(arraysize->getType(), CurrentDL->getTypeAllocSize(II->getAllocatedType()));
+				// 		totalsize = Builder->CreateMul(totalsize, arraysize);
+				// 		totalsize = Builder->CreateIntCast(totalsize, MySizeType, false);
+				// 		TheState.SetSizeForPointerVariable(II, totalsize);*/
 						const ConstantInt *CI = dyn_cast<ConstantInt>(alloca->getArraySize());
 						varinfo->is_array_alloca = true;
 						varinfo->arraysize = cast<ArrayType>(alloca->getAllocatedType())->getNumElements();
@@ -818,26 +950,28 @@ Output: name of the call function.
 						errs() << name << "\t alloca name:\n";
 					}
 					
-					const llvm::DebugLoc &debugInfo = I->getDebugLoc();
+					const llvm::DebugLoc &debugInfo = alloca->getDebugLoc();
 					if (debugInfo)
 					{
-						std::string filePath = debugInfo->getFilename();
+						//deb-llvm10 update
+						//std::string filePath = debugInfo->getFilename();
+						llvm::StringRef filePath = debugInfo->getFilename();
 						int line = debugInfo->getLine();
 						int column = debugInfo->getColumn();
-						errs() << I << "::" << "File name = " << filePath << "Line no: " << line << ":" << column << "!\n";
+						errs() << alloca << "::" << "File name = " << filePath << "Line no: " << line << ":" << column << "!\n";
 					}
 					else
 					{
 						errs() << "No Debug Info" << "!\n";
 					}
 
-				}
-			}
+			
 		}
 
 		// maintains mapping between call instruction and it's operands alloca mappings
 		void ProcessAllBasicBlocks(Function &Func) {
 			for (Function::iterator Its = Func.begin(), Ite = Func.end(); Its != Ite; ++Its) {
+				errs() << "Calling PBB 0: ";
 				ProcessBasicBlock(*Its);
 			}
 		}
@@ -900,10 +1034,21 @@ Output: name of the call function.
 			
 
 			errs() << "\n\tFunction size " << Func.size();
+
+
 			//printResult();
+			//@Sampath
 			/*
 			 * Get hold of alloca instructions. Since, these intructions are Alloca we can use getEntryBlock() to
 			 * iterate over the first few ones.
+			 */
+			//@deb
+			//********Update-Spring2020**********************//
+			/*
+			 * Store alloca instuctions in a vector 
+			 * Get hold of llvm.dbg.declare calls for printing source level information
+			 * Find the corresponding alloca instruction from the first argument of llvm.dbg.declare calls
+			 * Search this alloca instuction in the vector, if match is found, Run the alloca identification in every call instruction
 			 */
 			processAllocaInstructions(Func);
 			// Run the alloca identification in every call instruction
@@ -1143,7 +1288,16 @@ Output: name of the call function.
 	/*RegisterPass<shmemheat> X("shmemheat", "Prints shmem heat function  analysis");*/
 }
 
+
 char shmemheat::ID = 0;
+//@Abdullah
+//
+/*
+namespace llvm {
+	void initializeshmemheatPass(PassRegistry &);
+} */
+void initializeshmemheatPass(PassRegistry &);
+//char shmemheat::ID = 0;
 INITIALIZE_PASS(shmemheat, "shmemheatpass",
 	"Prints shmem heat function  analysis", false, false)
 
